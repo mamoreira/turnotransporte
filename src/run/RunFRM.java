@@ -11,6 +11,8 @@ import javax.swing.JScrollPane;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.CorporativoDAO;
+import dao.CorporativoDAOImpl;
 import dtos.UsuarioDTO;
 
 public class RunFRM extends AbstractFRM{
@@ -67,6 +69,7 @@ public class RunFRM extends AbstractFRM{
     	textFechaCreacion= new javax.swing.JTextField(10);
     	
     	textUsuario.setEnabled(false);
+    	textFechaCreacion.setText(CorporativoDAOImpl.getFecha());
     	textFechaCreacion.setEnabled(false);
     	buttonProcesar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/process_icon.png"))); // NOI18N
 		buttonProcesar.setText("Procesar");
