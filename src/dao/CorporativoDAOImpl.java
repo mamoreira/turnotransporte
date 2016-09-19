@@ -36,6 +36,9 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		} 
         return persona;
 	}
+	public void generarMatrizTurno(){
+		
+	}
 
 }
 

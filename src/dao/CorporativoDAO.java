@@ -7,4 +7,6 @@ import dtos.PersonaDTO;
 public interface CorporativoDAO {
 
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException;
+
+	public void generarMatrizTurno();
 }
