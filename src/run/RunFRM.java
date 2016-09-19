@@ -9,6 +9,12 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
+import com.toedter.calendar.JDateChooser;
+
+import dao.CorporativoDAO;
+import dao.CorporativoDAOImpl;
+import dtos.UsuarioDTO;
+
 public class RunFRM extends AbstractFRM{
 
 	
@@ -20,10 +26,22 @@ public class RunFRM extends AbstractFRM{
 	private static final long serialVersionUID = -6704917066251864499L;
 	private FondoInicial fondo;
 	private javax.swing.JPanel panelBotones;
+	private javax.swing.JPanel panelCabecera;
+	private javax.swing.JPanel panelDetalle;
+	private javax.swing.JPanel panelBody;
 	private javax.swing.JPanel panelContenedor;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton buttonProcesar;
-
+    private javax.swing.JButton buttonGuardar;
+    private javax.swing.JLabel labelUsuario;
+    private javax.swing.JLabel labelFechaCreacion;
+    private javax.swing.JLabel labelFechaInicial;
+    private javax.swing.JLabel labelFechaFinal;
+    private JDateChooser chooserFechaInicial;
+    private JDateChooser chooserFechaFinal;
+    private javax.swing.JTextField textUsuario;
+    private javax.swing.JTextField textFechaCreacion;
+    
 	public RunFRM() throws SQLException{
 		initComponents();
 	}
@@ -34,9 +52,25 @@ public class RunFRM extends AbstractFRM{
     	setSize((pantallaTamano.width-100), (pantallaTamano.height-100)); 
         panelBotones = new javax.swing.JPanel();
         panelContenedor=new javax.swing.JPanel();
+        panelCabecera=new javax.swing.JPanel();
+        panelDetalle=new javax.swing.JPanel();
+        panelBody=new javax.swing.JPanel();
         scrollPanel=new JScrollPane();
         fondo=new FondoInicial();
     	buttonProcesar = new javax.swing.JButton();
+    	buttonGuardar= new javax.swing.JButton();
+    	labelUsuario= new javax.swing.JLabel("Usuario: ");
+    	labelFechaCreacion= new javax.swing.JLabel("Fecha Creacion: ");
+    	labelFechaInicial= new javax.swing.JLabel("Fecha Inicial: ");
+    	labelFechaFinal= new javax.swing.JLabel("Fecha Final: ");
+    	chooserFechaInicial= new JDateChooser();
+    	chooserFechaFinal= new JDateChooser();
+    	textUsuario = new javax.swing.JTextField(10);
+    	textFechaCreacion= new javax.swing.JTextField(10);
+    	
+    	textUsuario.setEnabled(false);
+    	textFechaCreacion.setText(CorporativoDAOImpl.getFecha());
+    	textFechaCreacion.setEnabled(false);
     	buttonProcesar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/process_icon.png"))); // NOI18N
 		buttonProcesar.setText("Procesar");
 		buttonProcesar.addActionListener(new java.awt.event.ActionListener() {
@@ -48,12 +82,42 @@ public class RunFRM extends AbstractFRM{
 				}
 		    }
 		   });
-		panelBotones.add(buttonProcesar);
-    	panelContenedor.setLayout(new BorderLayout()); 
-        panelBotones.setPreferredSize(new Dimension(100,60));
+		buttonGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/process_icon.png"))); // NOI18N
+		buttonGuardar.setText("Guardar");
+		buttonGuardar.addActionListener(new java.awt.event.ActionListener() {
+		   public void actionPerformed(java.awt.event.ActionEvent evt) {
+		        try {
+		       	 accionGuardar();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		    }
+		   });
+		
         panelBotones.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panelBotones.setBorder(BorderFactory.createTitledBorder("Acciones")); 
+        panelBotones.setPreferredSize(new Dimension(100,60));
+        panelBotones.setBorder(BorderFactory.createTitledBorder("Acciones"));
+		panelBotones.add(buttonGuardar);
+		panelBotones.add(buttonProcesar);
+ 
+        panelCabecera.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panelCabecera.setPreferredSize(new Dimension(100,60));
+        panelCabecera.setBorder(BorderFactory.createTitledBorder("Turno"));
+		panelCabecera.add(labelUsuario);
+		panelCabecera.add(textUsuario);
+		panelCabecera.add(labelFechaCreacion);
+		panelCabecera.add(textFechaCreacion);
+		panelCabecera.add(labelFechaInicial);
+		panelCabecera.add(chooserFechaInicial);
+		panelCabecera.add(labelFechaFinal);
+		panelCabecera.add(chooserFechaFinal);	
+		
+		panelBody.setLayout(new BorderLayout()); 
+		panelBody.add(panelCabecera,BorderLayout.NORTH);
+    	panelContenedor.setLayout(new BorderLayout()); 
         panelContenedor.add(panelBotones,BorderLayout.NORTH);
+        panelContenedor.add(panelBody, BorderLayout.CENTER);
+        
         scrollPanel.setViewportView(panelContenedor);
 
         add(panelContenedor);
@@ -62,9 +126,12 @@ public class RunFRM extends AbstractFRM{
 
     }
 
-    protected void accionProcesar()  throws SQLException{
+    protected void accionGuardar()throws SQLException {
 		// TODO Auto-generated method stub
 		
+	}
+	protected void accionProcesar()  throws SQLException{
+    	corporativo.generarMatrizTurno();
 	}
 	/**
 	 * PROGRAMA PRINCIPAL

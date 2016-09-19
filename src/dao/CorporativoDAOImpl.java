@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import conexion.Conexion;
 import dtos.PersonaDTO;
@@ -36,6 +37,22 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		} 
         return persona;
 	}
+	public void generarMatrizTurno(){
+		
+	}
+	public static String getFecha(){
+		Calendar fecha = Calendar.getInstance();
+		 int dia;
+		 int mes;
+		 int anio;
+		 String textFecha;
+		 dia=fecha.get(Calendar.DATE);
+		 mes=fecha.get(Calendar.MONTH)+1;
+		 anio=fecha.get(Calendar.YEAR);
+		 textFecha=new String(String.format("%02d", dia)+"/"+String.format("%02d", mes)+"/"+Integer.toString(anio));
+		return textFecha;
+	}
+	
 
 }
 
