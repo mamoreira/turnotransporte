@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 import conexion.Conexion;
 import dtos.PersonaDTO;
+import dtos.TurnoDTO;
 
 public class CorporativoDAOImpl implements CorporativoDAO {
 	private Connection userConn;
@@ -40,7 +41,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	public void generarMatrizTurno(){
 		
 	}
-	public static String getFecha(){
+	public String getFecha(){
 		Calendar fecha = Calendar.getInstance();
 		 int dia;
 		 int mes;
@@ -53,6 +54,23 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		return textFecha;
 	}
 	
+	
+	
+	public void guardarTurno(TurnoDTO turno) throws SQLException{
+		Connection conn=null;
+		Statement stmt=null;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.createStatement();
+            stmt.execute("INSERT INTO TURNO()");
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		} 
+	}
 
 }
 

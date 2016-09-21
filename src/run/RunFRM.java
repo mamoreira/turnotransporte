@@ -5,15 +5,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 
 import com.toedter.calendar.JDateChooser;
 
-import dao.CorporativoDAO;
-import dao.CorporativoDAOImpl;
-import dtos.UsuarioDTO;
+import dtos.TurnoDTO;
 
 public class RunFRM extends AbstractFRM{
 
@@ -68,8 +67,9 @@ public class RunFRM extends AbstractFRM{
     	textUsuario = new javax.swing.JTextField(10);
     	textFechaCreacion= new javax.swing.JTextField(10);
     	
+    	textUsuario.setText("vvillacres");
     	textUsuario.setEnabled(false);
-    	textFechaCreacion.setText(CorporativoDAOImpl.getFecha());
+    	textFechaCreacion.setText(corporativo.getFecha());
     	textFechaCreacion.setEnabled(false);
     	buttonProcesar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/process_icon.png"))); // NOI18N
 		buttonProcesar.setText("Procesar");
@@ -127,7 +127,11 @@ public class RunFRM extends AbstractFRM{
     }
 
     protected void accionGuardar()throws SQLException {
-		// TODO Auto-generated method stub
+    	TurnoDTO turno=new TurnoDTO();
+//    	turno.setFechaCreacion(new Date(textFechaCreacion.getText()));
+    	turno.setFechaInicio(chooserFechaInicial.getDate());
+    	turno.setFechaFin(chooserFechaFinal.getDate());
+    	corporativo.guardarTurno(turno);
 		
 	}
 	protected void accionProcesar()  throws SQLException{
