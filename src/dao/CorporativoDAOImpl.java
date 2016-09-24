@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import conexion.Conexion;
 import dtos.PersonaDTO;
@@ -52,6 +54,30 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		 anio=fecha.get(Calendar.YEAR);
 		 textFecha=new String(String.format("%02d", dia)+"/"+String.format("%02d", mes)+"/"+Integer.toString(anio));
 		return textFecha;
+	}
+	
+	public int generarFicha(Random tapilla,int i, ArrayList<Integer> lista){
+		int fichasDisco;
+		do{
+			 fichasDisco =tapilla.nextInt(i)+1;//sorteo
+		 }while(lista.contains(fichasDisco));
+		return fichasDisco;
+	}
+	
+	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaexcluidos){
+		for(Integer disco: lista){
+			 listaexcluidos.add(disco);
+		 }
+	}
+	
+	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaExcluidos,int limite){
+		int maximo=0;
+		for (Integer disco: lista){
+			listaExcluidos.add(disco);
+			maximo++;
+			if (maximo== limite)
+				return;
+		}
 	}
 	
 	
