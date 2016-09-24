@@ -41,7 +41,12 @@ public class RunFRM extends AbstractFRM{
     private javax.swing.JTextField textUsuario;
     private javax.swing.JTextField textFechaCreacion;
     
+    //Variables
+    private TurnoDTO turno;
 	public RunFRM() throws SQLException{
+		turno = new TurnoDTO();
+		turno.setId(1L);
+		corporativo.generarMatrizTurno(turno);
 		initComponents();
 	}
 	public final void initComponents() throws SQLException{
@@ -127,7 +132,6 @@ public class RunFRM extends AbstractFRM{
     }
 
     protected void accionGuardar()throws SQLException {
-    	TurnoDTO turno=new TurnoDTO();
 //    	turno.setFechaCreacion(new Date(textFechaCreacion.getText()));
     	turno.setFechaInicio(chooserFechaInicial.getDate());
     	turno.setFechaFin(chooserFechaFinal.getDate());
@@ -135,7 +139,7 @@ public class RunFRM extends AbstractFRM{
 		
 	}
 	protected void accionProcesar()  throws SQLException{
-    	corporativo.generarMatrizTurno();
+    	corporativo.generarMatrizTurno(turno);
 	}
 	/**
 	 * PROGRAMA PRINCIPAL

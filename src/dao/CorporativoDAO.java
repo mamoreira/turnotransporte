@@ -11,7 +11,7 @@ public interface CorporativoDAO {
 
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException;
 
-	public void generarMatrizTurno();
+	public void generarMatrizTurno(TurnoDTO turno) throws SQLException;
 
 	public String getFecha();
 	
