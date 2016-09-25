@@ -79,7 +79,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
-				turnoDetalle.setTransporte(obtenerTransportePorDisco(discos.get(fichaDisco)));
+				turnoDetalle.setTransporte(obtenerTransportePorDisco(discosSorteados.get(fichaDisco)));
 				discosSorteados.remove(discosSorteados.get(fichaDisco));
 				guardarTurnoDetalle(turnoDetalle);
 				turnoDetalleList.add(turnoDetalle);
@@ -207,7 +207,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				+ "' and turno>20 order by turno";
 			}else{
 				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
-						+ "' and truno>21 order by turno";
+						+ "' and turno>21 order by turno";
 			}
 			stmt=conn.prepareStatement(SQL);
 			rs=stmt.executeQuery();
