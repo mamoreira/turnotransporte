@@ -55,21 +55,48 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		dias.add("viernes");
 		dias.add("sabado");
 		int fichaDisco=0;
+		int par=5;
 		List<Long> discos=obtenerDiscosTransporte(); //obtiene numero de discos para sorteo
 		List<TurnoDetalleDTO> turnoDetalleList=new ArrayList<TurnoDetalleDTO>();
 		for (String dia : dias) {
 			List<PuestoDTO> puestos=obtenerPrimerosPuestos(dia);
+			List<PuestoDTO> puestosFinales=obtenerUltimosPuestos(dias.get(par));
+			List<Long> discosSorteados=new ArrayList<Long>();
+
 			for (PuestoDTO puestoDTO : puestos) {
 				fichaDisco =(int) (Math.random()*discos.size()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
 				turnoDetalle.setTransporte(obtenerTransportePorDisco(discos.get(fichaDisco)));
+				discosSorteados.add(discos.get(fichaDisco));
 				discos.remove(discos.get(fichaDisco));
 				guardarTurnoDetalle(turnoDetalle);
 				turnoDetalleList.add(turnoDetalle);
 			}
+			for (PuestoDTO puestoDTO : puestosFinales) {
+				fichaDisco =(int) (Math.random()*discosSorteados.size()+0);
+				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
+				turnoDetalle.setTurno(turno);
+				turnoDetalle.setPuesto(puestoDTO);
+				turnoDetalle.setTransporte(obtenerTransportePorDisco(discos.get(fichaDisco)));
+				discosSorteados.remove(discosSorteados.get(fichaDisco));
+				guardarTurnoDetalle(turnoDetalle);
+				turnoDetalleList.add(turnoDetalle);
+			}
+			par--;
 		}
+		
+		for(int i=0;i<6;i++){
+			par=5-i;
+			List<PuestoDTO> puestosIniciales=obtenerPrimerosPuestos(dias.get(i));
+			List<PuestoDTO> puestosFinales=obtenerUltimosPuestos(dias.get(par));
+			discos=obtenerDiscosTransporte();
+			fichaDisco =(int) (Math.random()*discos.size()+0);
+			
+			
+		}
+		
 	}
 	private int guardarTurnoDetalle(TurnoDetalleDTO turnoDetalle) throws SQLException {
 		Connection conn=null;
@@ -177,6 +204,41 @@ public class CorporativoDAOImpl implements CorporativoDAO {
         return puestos;
 	}
 	
+	private List<PuestoDTO> obtenerUltimosPuestos(String dia) throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		String SQL;
+		List<PuestoDTO> puestos=new ArrayList<>();
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			if(dia.equals("lunes")){
+				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
+				+ "' and turno>20 order by turno";
+			}else{
+				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
+						+ "' and truno>21 order by turno";
+			}
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+	        while (rs.next()) {
+	        	PuestoDTO puesto=new PuestoDTO();
+	        	puesto.setId(rs.getLong(1));
+	        	puesto.setHora(rs.getTime(2));
+	        	puesto.setDia(rs.getString(3));
+	        	puesto.setTurno(rs.getLong(4));
+	            puestos.add(puesto);
+	        }
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return puestos;
+	}
+	
 	public String getFecha(){
 		Calendar fecha = Calendar.getInstance();
 		 int dia;
@@ -188,6 +250,30 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		 anio=fecha.get(Calendar.YEAR);
 		 textFecha=new String(String.format("%02d", dia)+"/"+String.format("%02d", mes)+"/"+Integer.toString(anio));
 		return textFecha;
+	}
+	
+	public int generarFicha(Random tapilla,int i, ArrayList<Integer> lista){
+		int fichasDisco;
+		do{
+			 fichasDisco =tapilla.nextInt(i)+1;//sorteo
+		 }while(lista.contains(fichasDisco));
+		return fichasDisco;
+	}
+	
+	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaexcluidos){
+		for(Integer disco: lista){
+			 listaexcluidos.add(disco);
+		 }
+	}
+	
+	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaExcluidos,int limite){
+		int maximo=0;
+		for (Integer disco: lista){
+			listaExcluidos.add(disco);
+			maximo++;
+			if (maximo== limite)
+				return;
+		}
 	}
 	
 	
