@@ -1,10 +1,8 @@
 package dtos;
 
-import java.sql.Time;
-
 public class PuestoDTO {
 	private Long id;
-	private Time hora;
+	private String hora;
 	private String dia;
 	private Long turno;
 	public Long getId() {
@@ -13,10 +11,10 @@ public class PuestoDTO {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Time getHora() {
+	public String getHora() {
 		return hora;
 	}
-	public void setHora(Time hora) {
+	public void setHora(String hora) {
 		this.hora = hora;
 	}
 	public String getDia() {
