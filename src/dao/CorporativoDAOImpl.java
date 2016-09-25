@@ -87,16 +87,6 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			par--;
 		}
 		
-		for(int i=0;i<6;i++){
-			par=5-i;
-			List<PuestoDTO> puestosIniciales=obtenerPrimerosPuestos(dias.get(i));
-			List<PuestoDTO> puestosFinales=obtenerUltimosPuestos(dias.get(par));
-			discos=obtenerDiscosTransporte();
-			fichaDisco =(int) (Math.random()*discos.size()+0);
-			
-			
-		}
-		
 	}
 	private int guardarTurnoDetalle(TurnoDetalleDTO turnoDetalle) throws SQLException {
 		Connection conn=null;
@@ -189,7 +179,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	        while (rs.next()) {
 	        	PuestoDTO puesto=new PuestoDTO();
 	        	puesto.setId(rs.getLong(1));
-	        	puesto.setHora(rs.getTime(2));
+	        	puesto.setHora(rs.getString(2));
 	        	puesto.setDia(rs.getString(3));
 	        	puesto.setTurno(rs.getLong(4));
 	            puestos.add(puesto);
@@ -224,7 +214,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	        while (rs.next()) {
 	        	PuestoDTO puesto=new PuestoDTO();
 	        	puesto.setId(rs.getLong(1));
-	        	puesto.setHora(rs.getTime(2));
+	        	puesto.setHora(rs.getString(2));
 	        	puesto.setDia(rs.getString(3));
 	        	puesto.setTurno(rs.getLong(4));
 	            puestos.add(puesto);
