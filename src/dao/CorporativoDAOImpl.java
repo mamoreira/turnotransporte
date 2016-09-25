@@ -95,6 +95,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				turnoDetalleList.add(turnoDetalle);
 			}
 			
+			
 			//OBTENER DISCOS FALTANTES DEL SORTEO POR DIA
 			List<Long> discosFaltaSorteo=obtenerDiscosFaltaSorteoPorDia(dia);
 			discosSorteados=new ArrayList<>();
