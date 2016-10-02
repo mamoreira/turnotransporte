@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package run;
+package frames;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -23,6 +23,12 @@ public class FondoInicial extends JPanel{
     public FondoInicial(){
     
         fondo = new ImageIcon(getClass().getResource("/imagenes/fondo_gig4.jpg")).getImage();
+
+    
+    }
+    public FondoInicial(String URL){
+        
+        fondo = new ImageIcon(getClass().getResource(URL)).getImage();
 
     
     }
