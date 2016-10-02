@@ -1,4 +1,4 @@
-package run;
+package frames;
 
 import javax.swing.JFrame;
 

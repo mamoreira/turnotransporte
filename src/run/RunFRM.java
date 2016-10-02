@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.sql.SQLException;
-import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -13,6 +12,8 @@ import javax.swing.JScrollPane;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
+import frames.AbstractFRM;
+import frames.FondoInicial;
 
 public class RunFRM extends AbstractFRM{
 
@@ -46,7 +47,7 @@ public class RunFRM extends AbstractFRM{
 	public RunFRM() throws SQLException{
 		turno = new TurnoDTO();
 		turno.setId(1L);
-		corporativo.generarMatrizTurno(turno);
+		//corporativo.generarMatrizTurno(turno);
 		initComponents();
 	}
 	public final void initComponents() throws SQLException{
