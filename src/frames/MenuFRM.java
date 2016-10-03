@@ -49,7 +49,7 @@ public class MenuFRM extends AbstractFRM{
     	buttonGenerarTurno.setText(" Generar Sorteo  ");
     	buttonGenerarTurno.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-		        accionUsuario();
+		        new MatrizFRM().setVisible(true);
 		    }
 		   });
     	buttonConsultarTurno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/menuBuscar.png"))); // NOI18N

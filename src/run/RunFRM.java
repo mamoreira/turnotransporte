@@ -134,8 +134,8 @@ public class RunFRM extends AbstractFRM{
 
     protected void accionGuardar()throws SQLException {
 //    	turno.setFechaCreacion(new Date(textFechaCreacion.getText()));
-    	turno.setFechaInicio(chooserFechaInicial.getDate());
-    	turno.setFechaFin(chooserFechaFinal.getDate());
+//    	turno.setFechaInicio(chooserFechaInicial.getDate());
+//    	turno.setFechaFin(chooserFechaFinal.getDate());
     	corporativo.guardarTurno(turno);
 		
 	}
