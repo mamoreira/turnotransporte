@@ -155,7 +155,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 			turnoDetalle.setTurno(turno);
 			turnoDetalle.setPuesto(puestoDTO);
-			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.get(fichaDisco)));
+			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
 			guardarTurnoDetalle(turnoDetalle);
 			turnoDetalleList.add(turnoDetalle);
 		}
