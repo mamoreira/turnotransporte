@@ -1,14 +1,23 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import javax.swing.JOptionPane;
 
 import conexion.Conexion;
 import dtos.PersonaDTO;
@@ -16,12 +25,14 @@ import dtos.PuestoDTO;
 import dtos.TransporteDTO;
 import dtos.TurnoDTO;
 import dtos.TurnoDetalleDTO;
+import frames.AbstractJasperReport;
 
 public class CorporativoDAOImpl implements CorporativoDAO {
 	private Connection userConn;
 	
 
 	private final String SQL_INSERT_TURNODETALLE="INSERT INTO turnodetalle(turno_id,puesto_id,transporte_id) VALUES(?,?,?)";
+	private final String SQL_INSERT_TURNO="INSERT INTO turno (fecha_creacion, fecha_inicio, fecha_fin, usuario_id) VALUES (?,?,?, '1')";
 
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException{
 		Connection conn=null;
@@ -121,9 +132,15 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 			par--;
 		}
-		
+		mostarReporteTurno();
 	}
 
+	private void mostarReporteTurno(){
+		Map<String , Object> parametros=new HashMap<>();
+		parametros.put("turno_id", new BigDecimal(1));
+		AbstractJasperReport.createReport("src/reportes/ReporteTurnos.jasper",parametros);
+		AbstractJasperReport.showViewer();
+	}
 	private List<PuestoDTO> obtenerMitadFinalPuestos(String dia) throws SQLException {
 		Connection conn=null;
 		PreparedStatement stmt=null;
@@ -401,13 +418,32 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	
 	
 	
-	public void guardarTurno(TurnoDTO turno) throws SQLException{
+	public TurnoDTO guardarTurno(TurnoDTO turno) throws SQLException{
 		Connection conn=null;
-		Statement stmt=null;
+		PreparedStatement stmt=null;
+		PreparedStatement stmt1=null;
+		ResultSet rs=null;
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			stmt=conn.createStatement();
-            stmt.execute("INSERT INTO TURNO()");
+			stmt=conn.prepareStatement(SQL_INSERT_TURNO);
+        	int index=1;
+
+
+        	
+        	
+        	SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   	
+        	
+			stmt.setString(index++,ft.format(turno.getFechaCreacion()));
+			stmt.setString(index++,ft.format(turno.getFechaInicio()));
+			stmt.setString(index++,ft.format(turno.getFechaFin()));
+			stmt.executeUpdate();
+			
+			stmt1=conn.prepareStatement("SELECT LAST_INSERT_ID()");
+			rs=stmt1.executeQuery();
+	        while (rs.next()) {
+	        	turno.setId(rs.getLong(1));
+	        	return turno;
+	        }
 		}
 		finally{
 			Conexion.close(stmt);
@@ -415,6 +451,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				Conexion.close(conn);
 			}
 		} 
+		return turno;
 	}
 
 }

@@ -21,7 +21,7 @@ public interface CorporativoDAO {
 	
 	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaexcluidos, int limite);
 
-	public void guardarTurno(TurnoDTO turno) throws SQLException;
+	public TurnoDTO guardarTurno(TurnoDTO turno) throws SQLException;
 	
 	
 }
