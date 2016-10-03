@@ -70,7 +70,8 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		//obtiene numero de discos para sorteo primeros y ultimos puestos
 		List<Long> discos=obtenerDiscosTransporte(); 
 		//obtiene numero de discos para sorteo puesto de la mitad
-		List<Long> discos2=obtenerDiscosTransporte(); 
+		List<Long> discos2=obtenerDiscosTransporte();
+		List<Long> discosSorteados = null;
 		
 		List<TurnoDetalleDTO> turnoDetalleList=new ArrayList<TurnoDetalleDTO>();
 		for (String dia : dias) {
@@ -79,10 +80,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			//obtiene puestos finales para el sorteo
 			List<PuestoDTO> puestosFinales=obtenerUltimosPuestos(dias.get(par));
 			//obtiene puestos mitad Inicial
-			List<PuestoDTO> puestosMitadInicial=obtenerMitadInicialPuestos(dia);
-			//obtiene puestos mitad Final
-			List<PuestoDTO> puestosMitadFinal=obtenerMitadFinalPuestos(dias.get(par));
-			List<Long> discosSorteados=new ArrayList<Long>();
+			discosSorteados=new ArrayList<Long>();
 
 			for (PuestoDTO puestoDTO : puestos) {
 				fichaDisco =(int) (Math.random()*discos.size()+0);
@@ -105,10 +103,17 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				guardarTurnoDetalle(turnoDetalle);
 				turnoDetalleList.add(turnoDetalle);
 			}
-			
+			par--;
+			}
+		
+		par=5;
+		for (String dia : dias){
+			List<PuestoDTO> puestosMitadInicial=obtenerMitadInicialPuestos(dia);
+			//obtiene puestos mitad Final
+			List<PuestoDTO> puestosMitadFinal=obtenerMitadFinalPuestos(dias.get(par));
 			//OBTENER DISCOS FALTANTES DEL SORTEO POR DIA
-			List<Long> discosFaltaSorteo=obtenerDiscosFaltaSorteoPorDia(dia);
-			discosSorteados=new ArrayList<>();
+			List<Long> discosFaltaSorteo=obtenerDiscosFaltaSorteoPorDia(dia,turno);
+			//discosSorteados=new ArrayList<>();
 			for (PuestoDTO puestoDTO : puestosMitadInicial) {
 				fichaDisco =(int) (Math.random()*discosFaltaSorteo.size()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
@@ -120,6 +125,9 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				guardarTurnoDetalle(turnoDetalle);
 				turnoDetalleList.add(turnoDetalle);
 			}
+			//discosSorteados.sort(null);
+			System.out.println(discosSorteados);
+			
 			for (PuestoDTO puestoDTO : puestosMitadFinal) {
 				fichaDisco =(int) (Math.random()*discosSorteados.size()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
@@ -132,7 +140,38 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 			par--;
 		}
-		mostarReporteTurno();
+		List<Long> discosDomingo= new ArrayList<>();
+		if(turno.getId()==1){
+		//	discos2.sort(null);
+			discosDomingo=discos2.subList(0,14);
+		}
+		else{
+			Long reporteId=turno.getId()-1;
+			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
+			int puntero=0;
+			int indice=0;
+			while(puntero<15){
+				while(ref<25){
+					discosDomingo.add(discos2.get(ref));
+					ref++;
+					puntero++;
+				}
+				discosDomingo.add(discos2.get(indice));
+				puntero++;
+			}
+		}
+		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
+		for (PuestoDTO puestoDTO : puestosDomingo) {
+			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
+			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
+			turnoDetalle.setTurno(turno);
+			turnoDetalle.setPuesto(puestoDTO);
+			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
+			guardarTurnoDetalle(turnoDetalle);
+			turnoDetalleList.add(turnoDetalle);
+		}
+		
+	mostarReporteTurno();
 	}
 
 	private void mostarReporteTurno(){
@@ -149,13 +188,20 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		List<PuestoDTO> puestos=new ArrayList<>();
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			if(dia.equals("sabado")){
+			if((dia.equals("jueves"))||(dia.equals("viernes"))||(dia.equals("sabado"))){
 				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
 				+ "' and turno>13 and turno <22 order by turno";
 			}else{
-				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
-						+ "' and turno>12  and turno<21 order by turno";
+				if((dia.equals("martes"))||(dia.equals("miercoles"))){
+					SQL="select id,hora,dia,turno from puesto where dia ='"+dia
+							+ "' and turno>12 and turno <22 order by turno";
+				}else{
+					SQL="select id,hora,dia,turno from puesto where dia ='"+dia
+							+ "' and turno>12  and turno<21 order by turno";
+				}
+				
 			}
+			
 			stmt=conn.prepareStatement(SQL);
 			rs=stmt.executeQuery();
 	        while (rs.next()) {
@@ -187,9 +233,14 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
 				+ "' and turno>5 and turno <14 order by turno";
 			}else{
+				if((dia.equals("jueves"))||(dia.equals("viernes"))){
+					SQL="select id,hora,dia,turno from puesto where dia ='"+dia
+					+ "' and turno>4 and turno <14 order by turno";
+				}else{
 				SQL="select id,hora,dia,turno from puesto where dia ='"+dia
 						+ "' and turno>4  and turno<13 order by turno";
-			}
+				}
+				}
 			stmt=conn.prepareStatement(SQL);
 			rs=stmt.executeQuery();
 	        while (rs.next()) {
@@ -209,7 +260,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}        
         return puestos;
 	}
-	private List<Long> obtenerDiscosFaltaSorteoPorDia(String dia) throws SQLException {
+	private List<Long> obtenerDiscosFaltaSorteoPorDia(String dia, TurnoDTO turno) throws SQLException {
 		Connection conn=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
@@ -221,9 +272,9 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				"select disco from transporte t where t.id not in ("
 				+ " select transporte_id from turnodetalle td"
 				+ " join puesto p on p.id=td.puesto_id"
-				+ " where dia='"
-				+ dia
-				+ "')");
+				+ " where dia='"+dia+ "'"
+				+ "      and td.turno_id="+turno.getId()+")"
+				+ "order by disco");
 			rs=stmt.executeQuery();
 	        while (rs.next()) {
 	        	Long disco= new Long(rs.getLong(1));
@@ -238,13 +289,44 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}        
         return discos;
 	}
+	
+	private List<PuestoDTO> obtenerPuestosDomingo() throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		String SQL;
+		List<PuestoDTO> puestos=new ArrayList<>();
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			SQL="select id,hora,dia,turno from puesto where dia ='domingo'"
+					+ " order by turno";
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+	        while (rs.next()) {
+	        	PuestoDTO puesto=new PuestoDTO();
+	        	puesto.setId(rs.getLong(1));
+	        	puesto.setHora(rs.getString(2));
+	        	puesto.setDia(rs.getString(3));
+	        	puesto.setTurno(rs.getLong(4));
+	            puestos.add(puesto);
+	        }
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return puestos;
+	}
+	
 	private int guardarTurnoDetalle(TurnoDetalleDTO turnoDetalle) throws SQLException {
 		Connection conn=null;
 		PreparedStatement stmt=null;
 		int rows=0;
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
 			stmt=conn.prepareStatement(SQL_INSERT_TURNODETALLE);
 			int index=1;
 			stmt.setLong(index++, turnoDetalle.getTurno().getId());
@@ -284,6 +366,32 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}        
         return discos;
 	}
+	
+	private List<Long> obtener15DiscosTransporte() throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		List<Long> discos=new ArrayList<>();
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.prepareStatement(
+				"select disco from transporte where id<16");
+			rs=stmt.executeQuery();
+	        while (rs.next()) {
+	        	Long disco= new Long(rs.getLong(1));
+	        	discos.add(disco);
+	        }
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return discos;
+	}
+	
 	private TransporteDTO obtenerTransportePorDisco(Long long1) throws SQLException {
 		Connection conn=null;
 		PreparedStatement stmt=null;
@@ -378,6 +486,51 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}        
         return puestos;
 	}
+	
+	private Long obtenerDiscoReferenciaDomingo(Long turno) throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		Long disco;
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.prepareStatement(
+				"select disco from transporte t where t.id = ("
+				+ " select max(transporte_id) from turnodetalle td"
+				+ " join puesto p on p.id=td.puesto_id"
+				+ " where dia='domingo'"
+				+ " and td.turno_id="+turno+")");
+			rs=stmt.executeQuery();
+	        disco= new Long(rs.getLong(1));
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return disco;
+	}
+	
+	private List<Long> obtener15Discos(int referencia,List<Long>discospasados) {
+		List <Long> discos= new ArrayList<>();
+		int puntero=0;
+		int ref=0;
+		int i=0;
+		while(i<15){
+			while(ref<25){
+				discos.add(discospasados.get(referencia));
+				ref++;
+				i++;
+			}
+			discos.add(discospasados.get(puntero));
+			i++;
+			puntero++;
+		}
+		return discos;
+	}
+	
 	
 	public String getFecha(){
 		Calendar fecha = Calendar.getInstance();
