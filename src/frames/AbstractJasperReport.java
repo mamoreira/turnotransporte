@@ -1,9 +1,6 @@
 package frames;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.WindowConstants;
 
 import conexion.Conexion;
 import net.sf.jasperreports.engine.JRException;
