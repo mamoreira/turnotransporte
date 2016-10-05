@@ -7,6 +7,9 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 
+import util.FondoInicial;
+import util.Util;
+
 public class MenuFRM extends AbstractFRM{
 
 	
@@ -28,6 +31,7 @@ public class MenuFRM extends AbstractFRM{
     
 	
 	public MenuFRM() throws SQLException{
+		Util.loadProperties();
 		initComponents();
 	}
 	public final void initComponents() throws SQLException{

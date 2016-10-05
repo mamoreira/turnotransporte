@@ -12,6 +12,8 @@ public interface CorporativoDAO {
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException;
 
 	public void generarMatrizTurno(TurnoDTO turno) throws SQLException;
+	
+	public void mostarReporteTurno(TurnoDTO turno);
 
 	public String getFecha();
 	
@@ -22,6 +24,8 @@ public interface CorporativoDAO {
 	public void excluirFichas(ArrayList<Integer> lista,ArrayList<Integer> listaexcluidos, int limite);
 
 	public TurnoDTO guardarTurno(TurnoDTO turno) throws SQLException;
+
+	public TurnoDTO validarRangoFechasTurno(TurnoDTO turno) throws SQLException;
 	
 	
 }

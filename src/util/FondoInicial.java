@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package frames;
+package util;
 
 import java.awt.Graphics;
 import java.awt.Image;

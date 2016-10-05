@@ -140,43 +140,42 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 			par--;
 		}
-		List<Long> discosDomingo= new ArrayList<>();
-		if(turno.getId()==1){
-		//	discos2.sort(null);
-			discosDomingo=discos2.subList(0,14);
-		}
-		else{
-			Long reporteId=turno.getId()-1;
-			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
-			int puntero=0;
-			int indice=0;
-			while(puntero<15){
-				while(ref<25){
-					discosDomingo.add(discos2.get(ref));
-					ref++;
-					puntero++;
-				}
-				discosDomingo.add(discos2.get(indice));
-				puntero++;
-			}
-		}
-		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
-		for (PuestoDTO puestoDTO : puestosDomingo) {
-			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
-			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
-			turnoDetalle.setTurno(turno);
-			turnoDetalle.setPuesto(puestoDTO);
-			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
-			guardarTurnoDetalle(turnoDetalle);
-			turnoDetalleList.add(turnoDetalle);
-		}
+//		List<Long> discosDomingo= new ArrayList<>();
+//		if(turno.getId()==1){
+//		//	discos2.sort(null);
+//			discosDomingo=discos2.subList(0,14);
+//		}
+//		else{
+//			Long reporteId=turno.getId()-1;
+//			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
+//			int puntero=0;
+//			int indice=0;
+//			while(puntero<15){
+//				while(ref<25){
+//					discosDomingo.add(discos2.get(ref));
+//					ref++;
+//					puntero++;
+//				}
+//				discosDomingo.add(discos2.get(indice));
+//				puntero++;
+//			}
+//		}
+//		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
+//		for (PuestoDTO puestoDTO : puestosDomingo) {
+//			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
+//			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
+//			turnoDetalle.setTurno(turno);
+//			turnoDetalle.setPuesto(puestoDTO);
+//			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
+//			guardarTurnoDetalle(turnoDetalle);
+//			turnoDetalleList.add(turnoDetalle);
+//		}
 		
-	mostarReporteTurno();
 	}
 
-	private void mostarReporteTurno(){
+	public void mostarReporteTurno(TurnoDTO turno){
 		Map<String , Object> parametros=new HashMap<>();
-		parametros.put("turno_id", new BigDecimal(1));
+		parametros.put("turno_id", new BigDecimal(turno.getId()));
 		AbstractJasperReport.createReport("src/reportes/ReporteTurnos.jasper",parametros);
 		AbstractJasperReport.showViewer();
 	}
@@ -605,6 +604,37 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 		} 
 		return turno;
+	}
+	
+	public TurnoDTO validarRangoFechasTurno(TurnoDTO turno) throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			String SQL="select id,fecha_inicio,fecha_fin,fecha_creacion,usuario_id diafin "
+					+ "from turno where month(fecha_inicio)= month('"+ ft.format(turno.getFechaInicio())+"') "
+					+ "and '"+ft.format(turno.getFechaInicio())+"' between fecha_inicio and fecha_fin";
+			System.out.println(SQL);
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				turno.setId(rs.getLong(1));
+				turno.setFechaInicio(rs.getDate(2));
+				turno.setFechaFin(rs.getDate(3));
+				turno.setFechaCreacion(rs.getDate(4));
+				return turno;
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return null;
 	}
 
 }

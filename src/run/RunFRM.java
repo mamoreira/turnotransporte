@@ -13,7 +13,8 @@ import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
 import frames.AbstractFRM;
-import frames.FondoInicial;
+import util.FondoInicial;
+import util.Label;
 
 public class RunFRM extends AbstractFRM{
 
@@ -33,10 +34,10 @@ public class RunFRM extends AbstractFRM{
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton buttonProcesar;
     private javax.swing.JButton buttonGuardar;
-    private javax.swing.JLabel labelUsuario;
-    private javax.swing.JLabel labelFechaCreacion;
-    private javax.swing.JLabel labelFechaInicial;
-    private javax.swing.JLabel labelFechaFinal;
+    private Label labelUsuario;
+    private Label labelFechaCreacion;
+    private Label labelFechaInicial;
+    private Label labelFechaFinal;
     private JDateChooser chooserFechaInicial;
     private JDateChooser chooserFechaFinal;
     private javax.swing.JTextField textUsuario;
@@ -64,10 +65,10 @@ public class RunFRM extends AbstractFRM{
         fondo=new FondoInicial();
     	buttonProcesar = new javax.swing.JButton();
     	buttonGuardar= new javax.swing.JButton();
-    	labelUsuario= new javax.swing.JLabel("Usuario: ");
-    	labelFechaCreacion= new javax.swing.JLabel("Fecha Creacion: ");
-    	labelFechaInicial= new javax.swing.JLabel("Fecha Inicial: ");
-    	labelFechaFinal= new javax.swing.JLabel("Fecha Final: ");
+    	labelUsuario= new Label("Usuario: ");
+    	labelFechaCreacion= new Label("Fecha Creacion: ");
+    	labelFechaInicial= new Label("Fecha Inicial: ");
+    	labelFechaFinal= new Label("Fecha Final: ");
     	chooserFechaInicial= new JDateChooser();
     	chooserFechaFinal= new JDateChooser();
     	textUsuario = new javax.swing.JTextField(10);

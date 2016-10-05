@@ -3,6 +3,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.WindowConstants;
+
 import conexion.Conexion;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -28,7 +30,7 @@ public abstract class AbstractJasperReport {
 	}
 	
 	public static void showViewer(){
-		viewer= new JasperViewer(reportFilled);
+		viewer= new JasperViewer(reportFilled,false);
 		viewer.setVisible(true);
 	}
 	public static void exportToPdf(String destino){
