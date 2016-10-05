@@ -8,7 +8,6 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
 
 import com.toedter.calendar.JDateChooser;
 

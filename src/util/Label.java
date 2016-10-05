@@ -4,8 +4,6 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import frames.AbstractFRM;
-
 public class Label extends JLabel {
 
 	/**
