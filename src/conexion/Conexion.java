@@ -18,7 +18,7 @@ private static String JDBC_URL;
 private static String JDBC_USER;
 private static String JDBC_PASS;
 private static Driver driver=null;
-private static String JDBC_FILE_NAME="ConexionJDBC";
+private static String JDBC_FILE_NAME="Propiedades";
 
 public static Properties loadProperties(String file){
 		Properties prop=new Properties();
