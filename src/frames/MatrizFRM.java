@@ -98,10 +98,12 @@ public class MatrizFRM extends AbstractFRM{
     	turno.setFechaCreacion(new Date(corporativo.getFecha()));
 		return true;
 	}
-
+	
+	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	protected void acciongenerar() throws SQLException {
 		TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
 		if( turnoTmp== null){
+            PantallaCargando p=new PantallaCargando();
 	    	turno=corporativo.guardarTurno(turno);
 	    	corporativo.generarMatrizTurno(turno);
 	    	corporativo.mostarReporteTurno(turno);
