@@ -140,15 +140,15 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}
 		List<Long> discosDomingo= new ArrayList<>();
 		if(esPrimerSorteo()){
-			discosDomingo=discos2.subList(0,14);
+			discosDomingo=discos2.subList(0, 15);
 		}
 		else{
 			Long reporteId=obtenerUltimoSorteo(turno.getId());
-			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
+			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId))+1;
 			int puntero=0;
 			int indice=0;
 			while(puntero<15){
-				while(ref<25||puntero<15){
+				while((ref<25)&&(puntero<15)){
 					discosDomingo.add(discos2.get(ref));
 					ref++;
 					puntero++;
@@ -168,7 +168,8 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 			turnoDetalle.setTurno(turno);
 			turnoDetalle.setPuesto(puestoDTO);
-			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
+			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.get(fichaDisco)));
+			discosDomingo.remove(discosDomingo.get(fichaDisco));
 			guardarTurnoDetalle(turnoDetalle);
 			turnoDetalleList.add(turnoDetalle);
 		}
@@ -492,14 +493,16 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		Connection conn=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
-		Long count;
+		Long count=0L;
 
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
 			stmt=conn.prepareStatement(
 					"select count(*) FROM turno" );
 			rs=stmt.executeQuery();
-	        count= new Long(rs.getLong(1));
+			while(rs.next()){
+				count= new Long(rs.getLong(1));
+			}
 		}
 		finally{
 			Conexion.close(stmt);
@@ -517,15 +520,17 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		Connection conn=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
-		Long disco;
+		Long disco=0L;
 
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
 			stmt=conn.prepareStatement(
-				"SELECT MAX(ID) FROM turno t"
-				+ "WHERE ID<("+turno+")");
+				"SELECT max(id) FROM turno t"
+				+ " WHERE id<(SELECT max(id) FROM turno)");
 			rs=stmt.executeQuery();
-	        disco= new Long(rs.getLong(1));
+			while(rs.next()){
+				disco= new Long(rs.getLong(1));
+			}
 		}
 		finally{
 			Conexion.close(stmt);
@@ -540,7 +545,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		Connection conn=null;
 		PreparedStatement stmt=null;
 		ResultSet rs=null;
-		Long disco;
+		Long disco=0L;
 
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
@@ -551,7 +556,9 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				+ " where dia='domingo'"
 				+ " and td.turno_id="+turno+")");
 			rs=stmt.executeQuery();
-	        disco= new Long(rs.getLong(1));
+			while(rs.next()){
+				disco= new Long(rs.getLong(1));
+			}  
 		}
 		finally{
 			Conexion.close(stmt);
