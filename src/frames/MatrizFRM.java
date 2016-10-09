@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import com.sun.org.apache.bcel.internal.generic.LADD;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
@@ -25,6 +26,7 @@ public class MatrizFRM extends AbstractFRM{
     private JDateChooser chooserFechaFinal;
     private FondoInicial fondo; 
     private TurnoDTO turno;
+    
 	/**
 	 * 
 	 */
@@ -101,12 +103,13 @@ public class MatrizFRM extends AbstractFRM{
 	
 	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	protected void acciongenerar() throws SQLException {
+		MenuFRM.hiloProgreso.iniciar();
 		TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
 		if( turnoTmp== null){
-            PantallaCargando p=new PantallaCargando();
 	    	turno=corporativo.guardarTurno(turno);
 	    	corporativo.generarMatrizTurno(turno);
 	    	corporativo.mostarReporteTurno(turno);
+	    	
 		}else{
 			turno= turnoTmp;
 			int resp = JOptionPane.showConfirmDialog(null, "Se encontró un sorteo generado para las fehcas establecidas Desea mostrarlo?");
@@ -114,6 +117,6 @@ public class MatrizFRM extends AbstractFRM{
 		    	corporativo.mostarReporteTurno(turno);
 			}
 		}
-
+		MenuFRM.hiloProgreso.detener();
 	}
 }

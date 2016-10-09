@@ -54,8 +54,6 @@ public class CorporativoDAOImpl implements CorporativoDAO {
         return persona;
 	}
 	public void generarMatrizTurno(TurnoDTO turno) throws SQLException{
-    	HiloProgreso p = new HiloProgreso();
-    	p.start();
 		ArrayList<String> dias=new ArrayList<>();
 		dias.add("lunes");
 		dias.add("martes");
