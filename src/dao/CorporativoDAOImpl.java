@@ -135,36 +135,40 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 			par--;
 		}
-//		List<Long> discosDomingo= new ArrayList<>();
-//		if(turno.getId()==1){
-//		//	discos2.sort(null);
-//			discosDomingo=discos2.subList(0,14);
-//		}
-//		else{
-//			Long reporteId=turno.getId()-1;
-//			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
-//			int puntero=0;
-//			int indice=0;
-//			while(puntero<15){
-//				while(ref<25){
-//					discosDomingo.add(discos2.get(ref));
-//					ref++;
-//					puntero++;
-//				}
-//				discosDomingo.add(discos2.get(indice));
-//				puntero++;
-//			}
-//		}
-//		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
-//		for (PuestoDTO puestoDTO : puestosDomingo) {
-//			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
-//			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
-//			turnoDetalle.setTurno(turno);
-//			turnoDetalle.setPuesto(puestoDTO);
-//			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
-//			guardarTurnoDetalle(turnoDetalle);
-//			turnoDetalleList.add(turnoDetalle);
-//		}
+		List<Long> discosDomingo= new ArrayList<>();
+		if(esPrimerSorteo()){
+			discosDomingo=discos2.subList(0,14);
+		}
+		else{
+			Long reporteId=obtenerUltimoSorteo(turno.getId());
+			int ref=discos2.indexOf(obtenerDiscoReferenciaDomingo(reporteId));
+			int puntero=0;
+			int indice=0;
+			while(puntero<15){
+				while(ref<25||puntero<15){
+					discosDomingo.add(discos2.get(ref));
+					ref++;
+					puntero++;
+				}
+				if(puntero<15){
+				discosDomingo.add(discos2.get(indice));
+				puntero++;
+				indice++;
+				}
+				else{
+					break;}
+			}
+		}
+		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
+		for (PuestoDTO puestoDTO : puestosDomingo) {
+			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
+			TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
+			turnoDetalle.setTurno(turno);
+			turnoDetalle.setPuesto(puestoDTO);
+			turnoDetalle.setTransporte(obtenerTransportePorDisco(discosDomingo.remove(fichaDisco)));
+			guardarTurnoDetalle(turnoDetalle);
+			turnoDetalleList.add(turnoDetalle);
+		}
 		
 	}
 
@@ -479,6 +483,54 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 		}        
         return puestos;
+	}
+	
+	private boolean esPrimerSorteo() throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		Long count;
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.prepareStatement(
+					"select count(*) FROM turno" );
+			rs=stmt.executeQuery();
+	        count= new Long(rs.getLong(1));
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		if (count==1)
+			return true;
+		else
+			return false;
+	}
+	
+	private Long obtenerUltimoSorteo(Long turno) throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		Long disco;
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.prepareStatement(
+				"SELECT MAX(ID) FROM turno t"
+				+ "WHERE ID<("+turno+")");
+			rs=stmt.executeQuery();
+	        disco= new Long(rs.getLong(1));
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return disco;
 	}
 	
 	private Long obtenerDiscoReferenciaDomingo(Long turno) throws SQLException {
