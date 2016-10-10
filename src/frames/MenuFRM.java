@@ -27,7 +27,7 @@ public class MenuFRM extends AbstractFRM{
     private JButton buttonGenerarTurno;
     private JButton buttonConsultarTurno;
     private JButton buttonTransporte;
-    
+   // public static HiloProgreso hiloProgreso = new HiloProgreso();
     
 	
 	public MenuFRM() throws SQLException{
@@ -63,7 +63,7 @@ public class MenuFRM extends AbstractFRM{
     	buttonConsultarTurno.setText("Consultar Turnos");
     	buttonConsultarTurno.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-		        accionUsuario();
+			   new ConsultaFRM().setVisible(true);
 		    }
 		   });
     	

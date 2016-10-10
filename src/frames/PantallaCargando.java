@@ -26,7 +26,7 @@ public final class PantallaCargando extends JFrame {
         setLocationRelativeTo(null);
         setProgresoMax(100);
         setVisible(true);
-        velocidadDeCarga(999999);
+//        velocidadDeCarga(999999);
     }
  
     public void dibujaVentana() {
@@ -70,6 +70,7 @@ public final class PantallaCargando extends JFrame {
                 String barra = " " + (j + i);
             }
             setProgreso("Cargando " + i, i);
+            repaint();
         }
         dispose();
     }
@@ -77,5 +78,6 @@ public final class PantallaCargando extends JFrame {
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void main(String[] args) {
     	PantallaCargando p=new PantallaCargando();
+    	p.setVisible(true);
     }
 }
