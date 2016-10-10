@@ -10,8 +10,12 @@ public class HiloProgreso extends Thread {
 			a.setVisible(true);
 			for (int i = 0; i < 100; i++) {
 				System.out.println("progreso "+i);
-				a.setProgreso("Cargando " + i, i);
-				if(!life) break;
+				a.setProgreso("Cargando... ",30+i);
+				a.repaint();
+				if(!life) {
+					a.setVisible(false);
+					break;
+				}
 				try {
 					Thread.sleep(180);
 				} catch (InterruptedException e) {
@@ -19,9 +23,6 @@ public class HiloProgreso extends Thread {
 					e.printStackTrace();
 				}
 			}
-			a.dispose();
-			life=false;
-			a.setVisible(false);
 		}
 	}
 	
@@ -33,16 +34,14 @@ public class HiloProgreso extends Thread {
              // TODO Auto-generated catch block
              e.printStackTrace();
          }
+		
 	 }
 	void iniciar(){
 		life=true;
 		start();
 	}
-	@SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void main(String[] args) {
     	HiloProgreso p = new HiloProgreso();
-    	p.start();
-    	
-    	
+    	p.iniciar();
     }
 }

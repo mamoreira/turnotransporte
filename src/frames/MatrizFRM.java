@@ -3,16 +3,17 @@ package frames;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import com.sun.org.apache.bcel.internal.generic.LADD;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
+import sun.security.krb5.internal.PAData;
 import util.FondoInicial;
 import util.Label;
 import util.Util;
@@ -26,7 +27,7 @@ public class MatrizFRM extends AbstractFRM{
     private JDateChooser chooserFechaFinal;
     private FondoInicial fondo; 
     private TurnoDTO turno;
-    
+    private PantallaCargando p;
 	/**
 	 * 
 	 */
@@ -63,8 +64,19 @@ public class MatrizFRM extends AbstractFRM{
 					e.printStackTrace();
 				}
 		    }
-		   });
+		    
+		   }
     	
+    	);
+    	
+    	buttonGenerar.addMouseListener(new java.awt.event.MouseAdapter() {
+    			
+            @Override
+            public void mousePressed(MouseEvent e) {
+            	p = new PantallaCargando();
+            	p.setProgreso("Cargando...", 50);
+            }
+        });
     	fondo.setBounds(0,0, 300,250);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelFechaInicial);
@@ -80,18 +92,23 @@ public class MatrizFRM extends AbstractFRM{
 	protected boolean validarCampos() {
 		if (chooserFechaInicial.getDate() == null){
 			JOptionPane.showMessageDialog(null, "Campo FECHA INICIAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+			p.setVisible(false);
 			return false;
 		}else if(chooserFechaFinal.getDate() == null){
-				JOptionPane.showMessageDialog(null, "Campo FECHA FINAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
-				return false;
+			JOptionPane.showMessageDialog(null, "Campo FECHA FINAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+			p.setVisible(false);
+			return false;
 		}else if(Util.getDiaSemana(chooserFechaInicial.getDate())!=2){
 			JOptionPane.showMessageDialog(null, "Fecha inicial incorrecta, acepta solo LUNES", "error", JOptionPane.ERROR_MESSAGE);
+			p.setVisible(false);
 			return false;
 	    }else if(Util.getDiaSemana(chooserFechaFinal.getDate())!=1){
 			JOptionPane.showMessageDialog(null, "Fecha final incorrecta, acepta solo DOMINGOS", "error", JOptionPane.ERROR_MESSAGE);
+			p.setVisible(false);
 			return false;
 	    }else if(Util.diferenciaFechas(chooserFechaInicial.getDate(),chooserFechaFinal.getDate())!=7){
 			JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
+			p.setVisible(false);
 			return false;
 	    }
 				
@@ -103,20 +120,22 @@ public class MatrizFRM extends AbstractFRM{
 	
 	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	protected void acciongenerar() throws SQLException {
-		MenuFRM.hiloProgreso.iniciar();
-		TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
-		if( turnoTmp== null){
-	    	turno=corporativo.guardarTurno(turno);
-	    	corporativo.generarMatrizTurno(turno);
-	    	corporativo.mostarReporteTurno(turno);
-	    	
-		}else{
-			turno= turnoTmp;
-			int resp = JOptionPane.showConfirmDialog(null, "Se encontró un sorteo generado para las fehcas establecidas Desea mostrarlo?");
-			if(resp==0){
+		int resp1 = JOptionPane.showConfirmDialog(null, "Está seguro que desea generar el tunro");
+		if(resp1==0){
+			TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
+			if( turnoTmp== null){
+		    	turno=corporativo.guardarTurno(turno);
+		    	corporativo.generarMatrizTurno(turno);
 		    	corporativo.mostarReporteTurno(turno);
+		    	
+			}else{
+				turno= turnoTmp;
+				int resp = JOptionPane.showConfirmDialog(null, "Se encontró un sorteo generado para las fehcas establecidas Desea mostrarlo?");
+				if(resp==0){
+			    	corporativo.mostarReporteTurno(turno);
+				}
 			}
 		}
-		MenuFRM.hiloProgreso.detener();
+		p.setVisible(false);
 	}
 }

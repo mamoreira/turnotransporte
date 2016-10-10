@@ -25,7 +25,7 @@ public final class PantallaCargando extends JFrame {
         dibujaVentana();
         setLocationRelativeTo(null);
         setProgresoMax(100);
-//        setVisible(true);
+        setVisible(true);
 //        velocidadDeCarga(999999);
     }
  
@@ -70,6 +70,7 @@ public final class PantallaCargando extends JFrame {
                 String barra = " " + (j + i);
             }
             setProgreso("Cargando " + i, i);
+            repaint();
         }
         dispose();
     }
