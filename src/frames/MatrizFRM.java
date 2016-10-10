@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
-import sun.security.krb5.internal.PAData;
 import util.FondoInicial;
 import util.Label;
 import util.Util;
