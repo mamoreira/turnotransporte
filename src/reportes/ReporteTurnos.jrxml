@@ -168,11 +168,12 @@ where t.id=$P{turno_id}]]>
 	<title>
 		<band height="47" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="1" y="0" width="554" height="47" forecolor="#006699" backcolor="#006699" uuid="8ad6e607-f2b2-4928-a1a9-fed6399389c0"/>
+				<reportElement uuid="8ad6e607-f2b2-4928-a1a9-fed6399389c0" mode="Opaque" x="1" y="0" width="554" height="47" forecolor="#006699" backcolor="#006699"/>
+				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_TD" mode="Opaque" x="1" y="8" width="554" height="30" forecolor="#000066" backcolor="#FFFFFF" uuid="4899e14e-70f6-481f-b165-eb40389ccc34"/>
+				<reportElement uuid="4899e14e-70f6-481f-b165-eb40389ccc34" style="table_TD" mode="Opaque" x="0" y="8" width="554" height="30" forecolor="#000066" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Bodoni MT" size="24" isBold="true" isStrikeThrough="false"/>
 				</textElement>
@@ -181,41 +182,53 @@ where t.id=$P{turno_id}]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch">
+		<band height="88" splitType="Stretch">
 			<staticText>
-				<reportElement x="35" y="6" width="111" height="20" uuid="31a29f47-464f-4d19-9eff-ab7596a4296c"/>
+				<reportElement uuid="31a29f47-464f-4d19-9eff-ab7596a4296c" x="35" y="58" width="111" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FECHA INICIAL: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="289" y="6" width="101" height="20" uuid="ae0ba903-996c-4b36-adca-c290477dc2d7"/>
+				<reportElement uuid="ae0ba903-996c-4b36-adca-c290477dc2d7" x="289" y="58" width="101" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FECHA FINAL: ]]></text>
 			</staticText>
 			<textField pattern="dd-MMM-yyyy">
-				<reportElement x="146" y="6" width="100" height="20" uuid="561c043d-af72-481f-b191-5c1b38ee4583"/>
+				<reportElement uuid="561c043d-af72-481f-b191-5c1b38ee4583" x="146" y="58" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_inicio}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MMM-yyyy">
-				<reportElement x="390" y="6" width="100" height="20" uuid="8a036925-617d-4d16-a01f-efdfe2c19d34"/>
+				<reportElement uuid="8a036925-617d-4d16-a01f-efdfe2c19d34" x="390" y="58" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_fin}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="8ad6e607-f2b2-4928-a1a9-fed6399389c0" mode="Opaque" x="1" y="0" width="554" height="47" forecolor="#006699" backcolor="#006699"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4899e14e-70f6-481f-b165-eb40389ccc34" style="table_TD" mode="Opaque" x="0" y="0" width="554" height="30" forecolor="#000066" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Bodoni MT" size="24" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Cooperativa Ruta Policentro LINEA 10]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
 		<band height="44" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table 1" style="table 1" x="3" y="0" width="341" height="44" uuid="312fbd16-7618-4946-a18f-6d58551325f3"/>
+				<reportElement uuid="312fbd16-7618-4946-a18f-6d58551325f3" key="table 1" style="table 1" x="3" y="0" width="341" height="44"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="LunesAviernes" uuid="b6e98dba-4485-4af7-ab19-c0c8b0f68926">
 						<datasetParameter name="turno_id">
@@ -226,7 +239,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="40" uuid="38fde7bd-73cf-48be-a7fa-98227df75e7c">
 						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="40" height="30" uuid="46884696-85e8-49bb-a58b-5bdb51c6e1bf"/>
+								<reportElement uuid="46884696-85e8-49bb-a58b-5bdb51c6e1bf" x="0" y="0" width="40" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -235,7 +248,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell height="20" rowSpan="1">
 							<textField>
-								<reportElement style="table_TD" x="0" y="0" width="40" height="20" uuid="0d7dc21d-bf3a-4910-957c-a6598ce1fdb2"/>
+								<reportElement uuid="0d7dc21d-bf3a-4910-957c-a6598ce1fdb2" style="table_TD" x="0" y="0" width="40" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="13" isBold="true"/>
 								</textElement>
@@ -246,7 +259,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="39" uuid="092e6287-1475-4aee-8245-7ed75de1a9ca">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="39" height="30" uuid="e0a521e8-c471-416c-94c0-d915ce3c45f3"/>
+								<reportElement uuid="e0a521e8-c471-416c-94c0-d915ce3c45f3" x="0" y="0" width="39" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -255,7 +268,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="39" height="20" uuid="b2c77dd7-8ed8-4a50-a706-13f77496be3c"/>
+								<reportElement uuid="b2c77dd7-8ed8-4a50-a706-13f77496be3c" x="0" y="0" width="39" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="13" isBold="true"/>
 								</textElement>
@@ -266,7 +279,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="50" uuid="7a60de06-7a95-4613-9446-acee183b88dc">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="06f8a426-ab97-4b3a-a892-7265051b26be"/>
+								<reportElement uuid="06f8a426-ab97-4b3a-a892-7265051b26be" x="0" y="0" width="50" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -275,7 +288,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="50" height="20" uuid="e2b6a4ac-5672-45ae-b925-6bfa9a838a96"/>
+								<reportElement uuid="e2b6a4ac-5672-45ae-b925-6bfa9a838a96" x="0" y="0" width="50" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -286,7 +299,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="50" uuid="87cffd3a-85dc-44d6-bdda-d006d02a3234">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="5df51e50-72ef-4b44-8b9a-8ab7085b8808"/>
+								<reportElement uuid="5df51e50-72ef-4b44-8b9a-8ab7085b8808" x="0" y="0" width="50" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -295,7 +308,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="50" height="20" uuid="99d83e5b-8bc2-449e-aa5f-efda1268d0e4"/>
+								<reportElement uuid="99d83e5b-8bc2-449e-aa5f-efda1268d0e4" x="0" y="0" width="50" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -306,7 +319,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="62" uuid="b24f5504-438c-45c4-9922-de4567f80745">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="62" height="30" uuid="10f89072-d909-48fe-824f-4d375e9d1976"/>
+								<reportElement uuid="10f89072-d909-48fe-824f-4d375e9d1976" x="0" y="0" width="62" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -315,7 +328,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="62" height="20" uuid="a5c9d9b2-ad33-41c6-818b-05ccc784080e"/>
+								<reportElement uuid="a5c9d9b2-ad33-41c6-818b-05ccc784080e" x="0" y="0" width="62" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -326,7 +339,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="50" uuid="356fecab-be24-4d1e-9d52-ea69612cebde">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="9f1815a8-cfc3-4e4c-ae77-f82c1695f645"/>
+								<reportElement uuid="9f1815a8-cfc3-4e4c-ae77-f82c1695f645" x="0" y="0" width="50" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -335,7 +348,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="50" height="20" uuid="1cd01936-c513-4c76-bdf2-621290aca6ab"/>
+								<reportElement uuid="1cd01936-c513-4c76-bdf2-621290aca6ab" x="0" y="0" width="50" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -346,7 +359,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="50" uuid="49a645c0-ac74-4eb8-9f4d-9d33c82a739a">
 						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="8ebba5e8-5fd0-4be4-8065-2a497a5aafe6"/>
+								<reportElement uuid="8ebba5e8-5fd0-4be4-8065-2a497a5aafe6" x="0" y="0" width="50" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -355,7 +368,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="50" height="20" uuid="b5bbd732-4bd5-43dc-be90-d75e73b01d60"/>
+								<reportElement uuid="b5bbd732-4bd5-43dc-be90-d75e73b01d60" x="0" y="0" width="50" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -366,7 +379,7 @@ where t.id=$P{turno_id}]]>
 				</jr:table>
 			</componentElement>
 			<componentElement>
-				<reportElement key="table 2" style="table 2" x="448" y="0" width="105" height="44" uuid="af0c8d5d-4c7c-492b-8e34-8728745ebd26"/>
+				<reportElement uuid="af0c8d5d-4c7c-492b-8e34-8728745ebd26" key="table 2" style="table 2" x="448" y="0" width="105" height="44"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="domingos" uuid="da957f74-f24f-486e-8903-70972f89bf98">
 						<datasetParameter name="turno_id">
@@ -377,7 +390,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="55" uuid="b4fd3132-54b2-49f9-8d26-252ed461dc5d">
 						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="55" height="30" uuid="06f2ffc8-a985-4916-92d2-b2a8346d3c79"/>
+								<reportElement uuid="06f2ffc8-a985-4916-92d2-b2a8346d3c79" x="0" y="0" width="55" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -386,7 +399,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="55" height="20" uuid="dba22c9d-1193-4b5e-b497-ec36c39e7b94"/>
+								<reportElement uuid="dba22c9d-1193-4b5e-b497-ec36c39e7b94" x="0" y="0" width="55" height="20"/>
 								<box leftPadding="0"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="13" isBold="true"/>
@@ -398,7 +411,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="55" uuid="6663c3b4-394a-4d3c-923f-ad3855d69b4f">
 						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="55" height="30" uuid="e2e18d95-009c-47cb-ac87-4c91a007fa31"/>
+								<reportElement uuid="e2e18d95-009c-47cb-ac87-4c91a007fa31" x="0" y="0" width="55" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -407,7 +420,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="55" height="20" uuid="162376e1-0626-479b-83fc-08681926d570"/>
+								<reportElement uuid="162376e1-0626-479b-83fc-08681926d570" x="0" y="0" width="55" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -418,7 +431,7 @@ where t.id=$P{turno_id}]]>
 				</jr:table>
 			</componentElement>
 			<componentElement>
-				<reportElement key="table 2" style="table 2" x="344" y="0" width="104" height="44" uuid="9b8b89a7-1434-48d2-833d-4113d661038d"/>
+				<reportElement uuid="9b8b89a7-1434-48d2-833d-4113d661038d" key="table 2" style="table 2" x="344" y="0" width="104" height="44"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="sabados" uuid="a9bea77a-4476-420d-ae61-bc81b5bdfc60">
 						<datasetParameter name="turno_id">
@@ -429,7 +442,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="55" uuid="8e525a55-a81c-4eea-993f-deb9726bc1b2">
 						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="55" height="30" uuid="77dac358-1014-4c7d-a308-23eba337cb67"/>
+								<reportElement uuid="77dac358-1014-4c7d-a308-23eba337cb67" x="0" y="0" width="55" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -438,7 +451,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="55" height="20" uuid="c9dbc11b-1051-4275-be16-eab257818cd4"/>
+								<reportElement uuid="c9dbc11b-1051-4275-be16-eab257818cd4" x="0" y="0" width="55" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="13" isBold="true"/>
 								</textElement>
@@ -449,7 +462,7 @@ where t.id=$P{turno_id}]]>
 					<jr:column width="50" uuid="11b1a7ad-1241-4e58-8c0f-a58c600de5ea">
 						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="db908347-5548-4d86-b9e0-f6dc837daa93"/>
+								<reportElement uuid="db908347-5548-4d86-b9e0-f6dc837daa93" x="0" y="0" width="50" height="30"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
@@ -458,7 +471,7 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="50" height="20" uuid="f3f1afbe-807e-4e62-9981-83843b7121ec"/>
+								<reportElement uuid="f3f1afbe-807e-4e62-9981-83843b7121ec" x="0" y="0" width="50" height="20"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
@@ -473,40 +486,40 @@ where t.id=$P{turno_id}]]>
 	<pageFooter>
 		<band height="116" splitType="Stretch">
 			<staticText>
-				<reportElement x="25" y="34" width="241" height="20" uuid="19f21c92-fe41-4dda-a654-63d25c2640e6"/>
+				<reportElement uuid="19f21c92-fe41-4dda-a654-63d25c2640e6" x="25" y="34" width="241" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Firma Gerente]]></text>
+				<text><![CDATA[Firma Jefe de Grupo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="328" y="34" width="210" height="20" uuid="422b28b6-96a1-45ac-867e-9b23d5a2c629"/>
+				<reportElement uuid="422b28b6-96a1-45ac-867e-9b23d5a2c629" x="328" y="34" width="210" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Firma Responsable]]></text>
+				<text><![CDATA[Firma Sub-Jefe de Grupo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="25" y="14" width="241" height="20" uuid="e1271a13-7097-4544-8432-a19f9d26aad2"/>
+				<reportElement uuid="e1271a13-7097-4544-8432-a19f9d26aad2" x="25" y="14" width="241" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[_________________________________________________________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="328" y="14" width="210" height="20" uuid="eb5049b8-6a7d-4ca7-9b45-bb9711ada2b7"/>
+				<reportElement uuid="eb5049b8-6a7d-4ca7-9b45-bb9711ada2b7" x="328" y="14" width="210" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[_________________________________________________________]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="76" width="100" height="20" uuid="89077401-84bf-41b1-b7fd-d2ef056029a5"/>
+				<reportElement uuid="89077401-84bf-41b1-b7fd-d2ef056029a5" x="455" y="76" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MMM-yyyy">
-				<reportElement x="455" y="96" width="100" height="20" uuid="0d9945cc-26fc-4452-a3a0-cf31e4f9897e"/>
+				<reportElement uuid="0d9945cc-26fc-4452-a3a0-cf31e4f9897e" x="455" y="96" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fecha_creacion}]]></textFieldExpression>
 			</textField>

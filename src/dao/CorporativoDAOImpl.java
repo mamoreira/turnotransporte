@@ -79,7 +79,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			discosSorteados=new ArrayList<Long>();
 
 			for (PuestoDTO puestoDTO : puestos) {
-				fichaDisco =(int) (Math.random()*discos.size()+0);
+				fichaDisco =(int) (Math.random()*discos.size()*Math.random()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
@@ -90,7 +90,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				turnoDetalleList.add(turnoDetalle);
 			}
 			for (PuestoDTO puestoDTO : puestosFinales) {
-				fichaDisco =(int) (Math.random()*discosSorteados.size()+0);
+				fichaDisco =(int) (Math.random()*discosSorteados.size()*Math.random()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
@@ -595,7 +595,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		 dia=fecha.get(Calendar.DATE);
 		 mes=fecha.get(Calendar.MONTH)+1;
 		 anio=fecha.get(Calendar.YEAR);
-		 textFecha=new String(String.format("%02d", dia)+"/"+String.format("%02d", mes)+"/"+Integer.toString(anio));
+		 textFecha=new String(String.format("%02d", mes)+"/"+String.format("%02d", dia)+"/"+Integer.toString(anio));
 		return textFecha;
 	}
 	
@@ -690,6 +690,41 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 		}
 		return null;
+	}
+	
+	public boolean validarLogin(String user, String pass) throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		String SQL;
+		String clave= new String();
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			SQL="select clave from usuario where codigo='"+user
+						+ "'";
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+	        while (rs.next()) {
+	        	clave=rs.getString(1);
+	        }
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		if(clave==null){
+			return false;
+		}else{
+			if(clave.equals(pass)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
 	}
 
 }

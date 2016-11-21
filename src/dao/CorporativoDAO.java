@@ -27,5 +27,7 @@ public interface CorporativoDAO {
 
 	public TurnoDTO validarRangoFechasTurno(TurnoDTO turno) throws SQLException;
 	
+	public boolean validarLogin(String user, String pass) throws SQLException;
+	
 	
 }
