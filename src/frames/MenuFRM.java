@@ -85,7 +85,7 @@ public class MenuFRM extends AbstractFRM{
     	buttonUsuario.setText("Usuario/Persona ");
     	buttonUsuario.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-		        accionUsuario();
+			   new UsuarioFRM().setVisible(true);
 		    }
 		   });
     	fondo.setBounds(0,0, 300,380);
