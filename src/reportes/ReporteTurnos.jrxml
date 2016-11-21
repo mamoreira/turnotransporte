@@ -86,7 +86,7 @@ select
  from turnodetalle t
 join puesto p on p.id=t.puesto_id
 join transporte tr on tr.id=t.transporte_id
-where dia not in ('sabado')
+where dia not in ('sabado','domingo')
 and t.turno_id=$P{turno_id}
 ) as d
  group by hora,turno]]>
@@ -124,6 +124,25 @@ order by p.turno]]>
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<field name="sabado" class="java.lang.Long"/>
+	</subDataset>
+	<subDataset name="domingos" uuid="a15dac47-00f7-4c59-8fca-27ae735af94d">
+		<parameter name="turno_id" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[select
+hora as hora
+, tr.disco  as domingo
+
+ from turnodetalle t
+join puesto p on p.id=t.puesto_id
+join transporte tr on tr.id=t.transporte_id
+where dia in ('domingo')
+and t.turno_id=$P{turno_id}
+order by p.turno]]>
+		</queryString>
+		<field name="hora" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="domingo" class="java.lang.Long"/>
 	</subDataset>
 	<parameter name="turno_id" class="java.math.BigDecimal"/>
 	<queryString>
@@ -349,7 +368,7 @@ where t.id=$P{turno_id}]]>
 			<componentElement>
 				<reportElement key="table 2" style="table 2" x="448" y="0" width="105" height="44" uuid="af0c8d5d-4c7c-492b-8e34-8728745ebd26"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="sabados" uuid="91815055-035e-475f-b712-c7460d5c6fdc">
+					<datasetRun subDataset="domingos" uuid="da957f74-f24f-486e-8903-70972f89bf98">
 						<datasetParameter name="turno_id">
 							<datasetParameterExpression><![CDATA[$P{turno_id}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -367,7 +386,8 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="55" height="20" uuid="6fb79573-27b3-466e-a408-f6d23807fd30"/>
+								<reportElement x="0" y="0" width="55" height="20" uuid="dba22c9d-1193-4b5e-b497-ec36c39e7b94"/>
+								<box leftPadding="0"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="13" isBold="true"/>
 								</textElement>
@@ -387,11 +407,11 @@ where t.id=$P{turno_id}]]>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="55" height="20" uuid="a8d21255-c022-49cb-a79f-65217fd970a0"/>
+								<reportElement x="0" y="0" width="55" height="20" uuid="162376e1-0626-479b-83fc-08681926d570"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="15" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{sabado}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{domingo}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
