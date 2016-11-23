@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import util.FondoInicial;
@@ -38,6 +39,7 @@ public class MenuFRM extends AbstractFRM{
     	setLayout(new BorderLayout());
         setTitle(".::MENU PRINCIPAL");
     	setSize(300,380);
+    	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
     	
     	buttonUsuario= new JButton();
     	buttonGenerarTurno= new JButton();

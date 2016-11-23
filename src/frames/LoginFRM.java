@@ -34,6 +34,8 @@ public class LoginFRM extends AbstractFRM{
     private JButton buttonCancelar;
     private JButton buttonConsultarTurno;
     private JButton buttonTransporte;
+    
+    private PantallaCargando p;
 	
 	public LoginFRM() throws SQLException{
 		Util.loadProperties();
@@ -100,6 +102,8 @@ public class LoginFRM extends AbstractFRM{
  		   public void actionPerformed(java.awt.event.ActionEvent evt) {
  			    try {
  			    	if(validarCampos()){
+ 			    		//p = new PantallaCargando();
+ 		            	//p.setProgreso("Cargando...", 50);
  			    		acciongenerar();
  					}
  				} catch (SQLException e) {
@@ -211,7 +215,7 @@ public class LoginFRM extends AbstractFRM{
 	}
 	 
 	 protected void acciongenerar() throws SQLException {
-				Boolean llave=corporativo.validarLogin(textUser.getText(),textPass.getText()); // si trae dato es porq ya hay un turno para las fechas ingresadas
+				Boolean llave=corporativo.validarLogin(textUser.getText(),textPass.getText()); 
 				if(llave==true){
 					this.setVisible(false);
 					new MenuFRM().setVisible(true);

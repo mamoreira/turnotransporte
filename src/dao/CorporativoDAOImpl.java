@@ -699,13 +699,15 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		String SQL;
 		String clave= new String();
 		try{
-			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			SQL="select clave from usuario where codigo='"+user
-						+ "'";
-			stmt=conn.prepareStatement(SQL);
-			rs=stmt.executeQuery();
-	        while (rs.next()) {
-	        	clave=rs.getString(1);
+			if(!user.isEmpty()){
+				conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+				SQL="select clave from usuario where codigo='"+user
+							+ "'";
+				stmt=conn.prepareStatement(SQL);
+				rs=stmt.executeQuery();
+		        while (rs.next()) {
+		        	clave=rs.getString(1);
+		        }
 	        }
 		}
 		finally{
@@ -714,7 +716,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				Conexion.close(conn);
 			}
 		}
-		if(clave==null){
+		if (clave.isEmpty()){
 			return false;
 		}else{
 			if(clave.equals(pass)){
