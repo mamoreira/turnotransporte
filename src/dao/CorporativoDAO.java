@@ -6,6 +6,7 @@ import java.util.Random;
 
 import dtos.PersonaDTO;
 import dtos.TurnoDTO;
+import dtos.UsuarioDTO;
 
 public interface CorporativoDAO {
 
@@ -26,6 +27,12 @@ public interface CorporativoDAO {
 	public TurnoDTO guardarTurno(TurnoDTO turno) throws SQLException;
 
 	public TurnoDTO validarRangoFechasTurno(TurnoDTO turno) throws SQLException;
+	
+	public boolean validarLogin(String user, String pass) throws SQLException;
+	
+	public ArrayList<UsuarioDTO> getUsuarios() throws SQLException;
+	
+	public UsuarioDTO getUsuarioPorNombre(String name) throws SQLException;
 	
 	
 }

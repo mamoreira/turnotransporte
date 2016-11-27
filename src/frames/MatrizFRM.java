@@ -119,7 +119,7 @@ public class MatrizFRM extends AbstractFRM{
 	
 	@SuppressWarnings("ResultOfObjectAllocationIgnored")
 	protected void acciongenerar() throws SQLException {
-		int resp1 = JOptionPane.showConfirmDialog(null, "Está seguro que desea generar el tunro");
+		int resp1 = JOptionPane.showConfirmDialog(null, "Está seguro que desea generar el turno");
 		if(resp1==0){
 			TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
 			if( turnoTmp== null){
