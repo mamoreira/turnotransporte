@@ -1,10 +1,8 @@
 package frames;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.sql.SQLException;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,11 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.tools.Tool;
 
-import com.sun.javafx.tk.Toolkit;
-
-import dtos.TurnoDTO;
 import util.FondoInicial;
 import util.Util;
 
