@@ -53,7 +53,7 @@ public class Util {
     	//restamos las fechas como se puede ver son de tipo Calendar,
     	 
     	//debemos obtener el valor long con getTime.getTime.
-    	 
+    	 //diferencia= ( fechaAnterior.getTime() - fechaPosterior.getTime() )/ MILLSECS_PER_DAY;
     	c.setTimeInMillis(
     	 
     	       fechaFin.getTime().getTime() - fechaInicio.getTime().getTime());

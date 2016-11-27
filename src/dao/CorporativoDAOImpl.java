@@ -20,6 +20,7 @@ import dtos.PuestoDTO;
 import dtos.TransporteDTO;
 import dtos.TurnoDTO;
 import dtos.TurnoDetalleDTO;
+import dtos.UsuarioDTO;
 import frames.AbstractJasperReport;
 import frames.HiloProgreso;
 
@@ -29,7 +30,8 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 
 	private final String SQL_INSERT_TURNODETALLE="INSERT INTO turnodetalle(turno_id,puesto_id,transporte_id) VALUES(?,?,?)";
 	private final String SQL_INSERT_TURNO="INSERT INTO turno (fecha_creacion, fecha_inicio, fecha_fin, usuario_id) VALUES (?,?,?, '1')";
-
+	private final String SQL_INSERT_BUSDOMINGO="INSERT INTO busdomingo (disco,reporte_id) VALUES (?,?)";
+	
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException{
 		Connection conn=null;
 		Statement stmt=null;
@@ -79,7 +81,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			discosSorteados=new ArrayList<Long>();
 
 			for (PuestoDTO puestoDTO : puestos) {
-				fichaDisco =(int) (Math.random()*discos.size()+0);
+				fichaDisco =(int) (Math.random()*discos.size()*Math.random()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
@@ -90,7 +92,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 				turnoDetalleList.add(turnoDetalle);
 			}
 			for (PuestoDTO puestoDTO : puestosFinales) {
-				fichaDisco =(int) (Math.random()*discosSorteados.size()+0);
+				fichaDisco =(int) (Math.random()*discosSorteados.size()*Math.random()+0);
 				TurnoDetalleDTO turnoDetalle= new TurnoDetalleDTO();
 				turnoDetalle.setTurno(turno);
 				turnoDetalle.setPuesto(puestoDTO);
@@ -160,6 +162,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 					break;}
 			}
 		}
+		agregarBusReferenciaDomingo(discosDomingo.get(14),turno.getId());  // guarda el ultimo transporte
 		List<PuestoDTO> puestosDomingo=obtenerPuestosDomingo();
 		for (PuestoDTO puestoDTO : puestosDomingo) {
 			fichaDisco =(int) (Math.random()*discosDomingo.size()+0);
@@ -548,11 +551,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
 			stmt=conn.prepareStatement(
-				"select disco from transporte t where t.id = ("
-				+ " select max(transporte_id) from turnodetalle td"
-				+ " join puesto p on p.id=td.puesto_id"
-				+ " where dia='domingo'"
-				+ " and td.turno_id="+turno+")");
+				"select disco from busdomingo where reporte_id="+turno);	
 			rs=stmt.executeQuery();
 			while(rs.next()){
 				disco= new Long(rs.getLong(1));
@@ -585,6 +584,30 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		return discos;
 	}
 	
+	private int agregarBusReferenciaDomingo(Long disco, Long turno)throws SQLException {
+	
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		int rows=0;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			stmt=conn.prepareStatement(SQL_INSERT_BUSDOMINGO);
+			int index=1;
+			stmt.setLong(index++, disco);
+			stmt.setLong(index++, turno);
+			rows=stmt.executeUpdate();
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return rows;
+		
+	}
+	
 	
 	public String getFecha(){
 		Calendar fecha = Calendar.getInstance();
@@ -595,7 +618,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		 dia=fecha.get(Calendar.DATE);
 		 mes=fecha.get(Calendar.MONTH)+1;
 		 anio=fecha.get(Calendar.YEAR);
-		 textFecha=new String(String.format("%02d", dia)+"/"+String.format("%02d", mes)+"/"+Integer.toString(anio));
+		 textFecha=new String(String.format("%02d", mes)+"/"+String.format("%02d", dia)+"/"+Integer.toString(anio));
 		return textFecha;
 	}
 	
@@ -690,6 +713,96 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 		}
 		return null;
+	}
+	
+	public boolean validarLogin(String user, String pass) throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		String SQL;
+		String clave= new String();
+		try{
+			if(!user.isEmpty()){
+				conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+				SQL="select clave from usuario where codigo='"+user
+							+ "'";
+				stmt=conn.prepareStatement(SQL);
+				rs=stmt.executeQuery();
+		        while (rs.next()) {
+		        	clave=rs.getString(1);
+		        }
+	        }
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		if (clave.isEmpty()){
+			return false;
+		}else{
+			if(clave.equals(pass)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
+	}
+	public ArrayList<UsuarioDTO> getUsuarios() throws SQLException{
+		ArrayList<UsuarioDTO> listadeUsuarios= new ArrayList<>();
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			String SQL="select codigo,persona_id,estado from usuario";
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				UsuarioDTO user= new UsuarioDTO();
+				user.setNombre(rs.getString(1));
+				user.setId(rs.getLong(2));
+				user.setEstado(rs.getString(3));
+				listadeUsuarios.add(user);
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return listadeUsuarios;
+	}
+	
+	public UsuarioDTO getUsuarioPorNombre(String name) throws SQLException{
+		UsuarioDTO user= new UsuarioDTO();
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			String SQL="select codigo,persona_id,estado from usuario where codigo='"+name+"'";
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				user.setNombre(rs.getString(1));
+				user.setId(rs.getLong(2));
+				user.setEstado(rs.getString(3));
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return user;
 	}
 
 }
