@@ -185,11 +185,15 @@ public class UsuarioFRM extends AbstractFRM{
     public void accionEditar() {
     	try {
             usuarioTemplate.setAccion(true);    
-    		String codigo=tableUsuario.getValueAt(tableUsuario.getSelectedRow(), 0)+"";
-			UsuarioDTO usuario=corporativo.getUsuarioPorNombre(codigo);
-			usuarioTemplate.getTextId().setText(usuario.getId()+"");
-			usuarioTemplate.getTextUsuario().setText(usuario.getNombre()+"");
-			usuarioTemplate.setVisible(true);
+            if(tableUsuario.getSelectedRowCount()!=0){
+    		 String codigo=tableUsuario.getValueAt(tableUsuario.getSelectedRow(), 0)+"";
+			 UsuarioDTO usuario=corporativo.getUsuarioPorNombre(codigo);
+			 usuarioTemplate.getTextId().setText(usuario.getId()+"");
+			 usuarioTemplate.getTextUsuario().setText(usuario.getNombre()+"");
+			 usuarioTemplate.setVisible(true);
+			}else{
+	    		JOptionPane.showMessageDialog(null, " No ha seleccionado ningun dato para editar  ", "info", JOptionPane.INFORMATION_MESSAGE);   
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
