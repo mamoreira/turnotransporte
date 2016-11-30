@@ -87,8 +87,8 @@ public class UsuarioFRM extends AbstractFRM{
  	 			   else{ 
  	 				   UsuarioDTO user= new UsuarioDTO();
  	 				   user=corporativo.getUsuarioPorNombre(usuario);
- 	 				   if(user.getNombre().isEmpty()){
- 	 					 JOptionPane.showMessageDialog(null, " No se encontro ningun USUARIO  ", "error", JOptionPane.ERROR_MESSAGE);   
+ 	 				   if(user.getNombre() == null){
+ 	 					 JOptionPane.showMessageDialog(null, " No se encontro ningun USUARIO  ", "info", JOptionPane.INFORMATION_MESSAGE);   
  	 				   }
  	 				   else{
  	 					 DefaultTableModel model = (DefaultTableModel) tableUsuario.getModel();

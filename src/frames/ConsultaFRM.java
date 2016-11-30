@@ -19,14 +19,17 @@ import util.Label;
 
 public class ConsultaFRM extends AbstractFRM{
 
-	private Label labelFecha;
-	private Label labelId;
+	private Label labelDescription;
+	private Label labelFechaFinal;
+	private Label labelFechaInicial;
 	private JButton buttonBuscar;
     private JDateChooser chooserFechaInicial;
-    private JTextField textId;
+    private JDateChooser chooserFechaFinal;
     private FondoInicial fondo; 
     private TurnoDTO turno;
     private PantallaCargando p;
+    private JTable tableTurnos;
+    private JScrollPane scrollListaTurnos; 
 	/**
 	 * 
 	 */
@@ -39,13 +42,17 @@ public class ConsultaFRM extends AbstractFRM{
 	private void initComponent() {
 		setLayout(new BorderLayout());
         setTitle(".::CONSULTA TURNO");
-    	setSize(400,150);
-    	labelFecha = new Label("FECHA:");
-    	labelId=new Label("ID: ");
-    	textId=new JTextField(5);
+    	setSize(500,250);
+    	labelDescription= new Label("    Debe Escojer un Rango de Fecha No mayor a 30 Dias:   ");
+    	labelFechaFinal = new Label("FECHA FINAL: ");
+    	labelFechaInicial=new Label("FECHA INICIAL: ");
     	buttonBuscar=new JButton();
     	
     	chooserFechaInicial= new JDateChooser();
+    	chooserFechaFinal = new JDateChooser();
+    	tableTurnos =new JTable();
+    	scrollListaTurnos= new JScrollPane();
+    	
     	fondo=new FondoInicial("/imagenes/fondomenu.jpg");
     	
     	
@@ -72,13 +79,27 @@ public class ConsultaFRM extends AbstractFRM{
             	p.setProgreso("Cargando...", 50);
             }
         });
-    	fondo.setBounds(0,0, 300,250);
+    	
+    	//Tabla
+    	DefaultTableModel modelo= new DefaultTableModel();
+        modelo.addColumn("Usuario");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Estado");
+        tableTurnos.setModel(modelo);
+        scrollListaTurnos.setViewportView(tableTurnos);
+    	
+    	fondo.setBounds(0,0, 400,250);
     	fondo.setLayout(new FlowLayout());
-    	fondo.add(labelId);
-    	fondo.add(textId);
-    	fondo.add(labelFecha);
+
+    	fondo.add(labelDescription);
+    	fondo.add(labelFechaInicial);
     	fondo.add(chooserFechaInicial);
+    	fondo.add(labelFechaFinal);
+    	fondo.add(chooserFechaFinal);
     	fondo.add(buttonBuscar);
+    	fondo.add(scrollListaTurnos);
+    	tableTurnos.setSize(50, 50);
+    	scrollListaTurnos.setSize(50, 50);
     	add(fondo,BorderLayout.CENTER);
     	setLocationRelativeTo(null);
         setVisible(true);

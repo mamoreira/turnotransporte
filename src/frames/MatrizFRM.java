@@ -27,6 +27,9 @@ public class MatrizFRM extends AbstractFRM{
     private FondoInicial fondo; 
     private TurnoDTO turno;
     private PantallaCargando p;
+    private Runnable r ;
+    private Thread t;
+    private BarraDeProgreso pr;
 	/**
 	 * 
 	 */
@@ -72,10 +75,16 @@ public class MatrizFRM extends AbstractFRM{
     			
             @Override
             public void mousePressed(MouseEvent e) {
-            	p = new PantallaCargando();
-            	p.setProgreso("Cargando...", 50);
+//            	p = new PantallaCargando();
+//            	p.setProgreso("Cargando...", 50);
+            	pr=new BarraDeProgreso();
+            	r = new ProgresoRun(pr);
+                t = new Thread(r);
+            	t.start();
             }
         });
+    	
+    	
     	fondo.setBounds(0,0, 300,250);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelFechaInicial);
@@ -90,30 +99,46 @@ public class MatrizFRM extends AbstractFRM{
 
 	protected boolean validarCampos() {
 		if (chooserFechaInicial.getDate() == null){
+			//t.interrupt();
+			pr.cerrar();
 			JOptionPane.showMessageDialog(null, "Campo FECHA INICIAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
-			p.setVisible(false);
+			t.interrupt();
+			//p.setVisible(false);
+			
 			return false;
 		}else if(chooserFechaFinal.getDate() == null){
+			pr.cerrar();
+			
 			JOptionPane.showMessageDialog(null, "Campo FECHA FINAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
-			p.setVisible(false);
+			t.interrupt();
+			//p.setVisible(false);
 			return false;
 		}else if(Util.getDiaSemana(chooserFechaInicial.getDate())!=2){
+			pr.cerrar();
+			
 			JOptionPane.showMessageDialog(null, "Fecha inicial incorrecta, acepta solo LUNES", "error", JOptionPane.ERROR_MESSAGE);
-			p.setVisible(false);
+			t.interrupt();
+			//p.setVisible(false);
 			return false;
 	    }else if(Util.getDiaSemana(chooserFechaFinal.getDate())!=1){
-			JOptionPane.showMessageDialog(null, "Fecha final incorrecta, acepta solo DOMINGOS", "error", JOptionPane.ERROR_MESSAGE);
-			p.setVisible(false);
+	    	pr.cerrar();
+	    	
+	    	JOptionPane.showMessageDialog(null, "Fecha final incorrecta, acepta solo DOMINGOS", "error", JOptionPane.ERROR_MESSAGE);
+	    	t.interrupt();//p.setVisible(false);
 			return false;
 	    }else if(Util.diferenciaFechas(chooserFechaInicial.getDate(),chooserFechaFinal.getDate())!=7){
-			JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
-			p.setVisible(false);
+	    	pr.cerrar();
+	    	
+	    	JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
+	    	t.interrupt();//p.setVisible(false);
 			return false;
 	    }
 				
 		turno.setFechaInicio(chooserFechaInicial.getDate());
     	turno.setFechaFin(chooserFechaFinal.getDate());    	
     	turno.setFechaCreacion(new Date(corporativo.getFecha()));
+    	pr.cerrar();
+    	t.interrupt();
 		return true;
 	}
 	
@@ -121,20 +146,32 @@ public class MatrizFRM extends AbstractFRM{
 	protected void acciongenerar() throws SQLException {
 		int resp1 = JOptionPane.showConfirmDialog(null, "Está seguro que desea generar el turno");
 		if(resp1==0){
+			crearHilo();	
 			TurnoDTO turnoTmp=corporativo.validarRangoFechasTurno(turno); // si trae dato es porq ya hay un turno para las fechas ingresadas
 			if( turnoTmp== null){
+				t.start();
+				pr.setVisible(true);
 		    	turno=corporativo.guardarTurno(turno);
-		    	corporativo.generarMatrizTurno(turno);
+		    	corporativo.generarMatrizTurno(turno);		
 		    	corporativo.mostarReporteTurno(turno);
-		    	
+		    	pr.cerrar();
 			}else{
+				pr.cerrar();
 				turno= turnoTmp;
 				int resp = JOptionPane.showConfirmDialog(null, "Se encontró un sorteo generado para las fehcas establecidas Desea mostrarlo?");
 				if(resp==0){
 			    	corporativo.mostarReporteTurno(turno);
 				}
 			}
+			t.interrupt();
 		}
-		p.setVisible(false);
+		
+		//p.setVisible(false);
+	}
+	
+	protected void crearHilo(){
+			pr=new BarraDeProgreso();
+			r = new ProgresoRun(pr);
+		    t = new Thread(r);
 	}
 }
