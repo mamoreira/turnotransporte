@@ -16,7 +16,7 @@ import dtos.UsuarioDTO;
 import util.FondoInicial;
 import util.Util;
 
-public class AgregarUsuarioFRM extends AbstractFRM{
+public class AgregarTransporteFRM extends AbstractFRM{
 
 	private static final long serialVersionUID = 6312166505526175828L;
 	
@@ -36,7 +36,7 @@ public class AgregarUsuarioFRM extends AbstractFRM{
     
     private PantallaCargando p;
 	
-	public AgregarUsuarioFRM() throws SQLException{
+	public AgregarTransporteFRM() throws SQLException{
 		Util.loadProperties();
 		initComponents();
 		
@@ -213,7 +213,7 @@ public class AgregarUsuarioFRM extends AbstractFRM{
 	 
 	public static void main(String args[]) {
 	        try {
-	        	new AgregarUsuarioFRM().setVisible(true);
+	        	new AgregarTransporteFRM().setVisible(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

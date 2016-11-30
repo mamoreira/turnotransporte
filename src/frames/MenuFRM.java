@@ -37,6 +37,7 @@ public class MenuFRM extends AbstractFRM{
 	}
 	public final void initComponents() throws SQLException{
     	setLayout(new BorderLayout());
+    	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
         setTitle(".::MENU PRINCIPAL");
     	setSize(300,380);
     	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
@@ -76,7 +77,12 @@ public class MenuFRM extends AbstractFRM{
     	buttonTransporte.setText("    Transporte      ");
     	buttonTransporte.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-		        accionUsuario();
+				try {
+					new TransporteFRM().setVisible(true);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    }
 		   });
     	

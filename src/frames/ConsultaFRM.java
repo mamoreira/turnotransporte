@@ -3,14 +3,21 @@ package frames;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
+import com.sun.javafx.sg.prism.GrowableDataBuffer;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
