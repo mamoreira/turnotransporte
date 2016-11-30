@@ -19,7 +19,7 @@ import dtos.UsuarioDTO;
 import util.FondoInicial;
 import util.Util;
 
-public class UsuarioFRM extends AbstractFRM{
+public class TransporteFRM extends AbstractFRM{
 	
 	private JLabel labelUsuario;
 	private JTextField textUsuario;
@@ -32,14 +32,14 @@ public class UsuarioFRM extends AbstractFRM{
 	private AgregarUsuarioFRM usuarioTemplate;
 	
 	private static final long serialVersionUID = 6312166505526175828L;
-	public UsuarioFRM() throws SQLException{
+	public TransporteFRM() throws SQLException{
 		Util.loadProperties();
 		initComponents();
 		
 	}
 	public final void initComponents() throws SQLException{
     	setLayout(new BorderLayout());
-        setTitle(".::USUARIO");
+        setTitle(".::TRANSPORTE");
     	setSize(480,380);
     	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
     	
@@ -88,8 +88,8 @@ public class UsuarioFRM extends AbstractFRM{
     	fondo.add(textUsuario);
     	add(fondo);
     	//usuarioTemplate.setVisible(false);    	
-    	labelUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/user.png")));
-    	labelUsuario.setText("Usuario:");
+    	labelUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bus.png")));
+    	labelUsuario.setText("Disco:");
     	
     	
  //BUTTON BUSCAR
@@ -236,7 +236,7 @@ public class UsuarioFRM extends AbstractFRM{
 	}
 	public static void main(String args[]) {
         try {
-        	new UsuarioFRM().setVisible(true);
+        	new TransporteFRM().setVisible(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

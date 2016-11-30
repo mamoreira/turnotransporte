@@ -31,7 +31,10 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	private final String SQL_INSERT_TURNODETALLE="INSERT INTO turnodetalle(turno_id,puesto_id,transporte_id) VALUES(?,?,?)";
 	private final String SQL_INSERT_TURNO="INSERT INTO turno (fecha_creacion, fecha_inicio, fecha_fin, usuario_id) VALUES (?,?,?, '1')";
 	private final String SQL_INSERT_BUSDOMINGO="INSERT INTO busdomingo (disco,reporte_id) VALUES (?,?)";
-	
+	private final String SQL_UPDATE_USUARIO="UPDATE usuario SET estado=? where codigo=?";
+	private final String SQL_UPDATE_USUARIO_CLAVE="UPDATE usuario SET clave=md5(?), estado=? where codigo=?";
+	private final String SQL_INSERT_USUARIO="INSERT INTO usuario (codigo, clave, estado, persona_id) VALUES (?,md5(?),?, '1')";
+
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException{
 		Connection conn=null;
 		Statement stmt=null;
@@ -725,11 +728,12 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			if(!user.isEmpty()){
 				conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
 				SQL="select clave from usuario where codigo='"+user
-							+ "'";
+							+ "' and clave=md5('"+pass+"')";
 				stmt=conn.prepareStatement(SQL);
 				rs=stmt.executeQuery();
 		        while (rs.next()) {
 		        	clave=rs.getString(1);
+		        	return true;
 		        }
 	        }
 		}
@@ -738,18 +742,8 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			if(this.userConn==null){
 				Conexion.close(conn);
 			}
-		}
-		if (clave.isEmpty()){
-			return false;
-		}else{
-			if(clave.equals(pass)){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		
+		}	
+		return false;
 	}
 	public ArrayList<UsuarioDTO> getUsuarios() throws SQLException{
 		ArrayList<UsuarioDTO> listadeUsuarios= new ArrayList<>();
@@ -778,7 +772,57 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}
 		return listadeUsuarios;
 	}
-	
+
+	public void guardarUsuario(UsuarioDTO usuario)throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		int rows=0;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			stmt=conn.prepareStatement(SQL_INSERT_USUARIO);
+			int index=1;
+			stmt.setString(index++, usuario.getNombre());
+			stmt.setString(index++, usuario.getClave());
+			stmt.setString(index++, usuario.getEstado());
+			rows=stmt.executeUpdate();
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+	}
+
+	public void actualizarUsuario(UsuarioDTO usuario)throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		int rows=0;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			if(usuario.getClave().equals("")){
+				stmt=conn.prepareStatement(SQL_UPDATE_USUARIO);
+				int index=1;
+				stmt.setString(index++, usuario.getEstado());
+				stmt.setString(index++, usuario.getNombre());
+			}else{
+				stmt=conn.prepareStatement(SQL_UPDATE_USUARIO_CLAVE);
+				int index=1;
+				stmt.setString(index++, usuario.getClave());
+				stmt.setString(index++, usuario.getEstado());
+				stmt.setString(index++, usuario.getNombre());			
+			}
+			rows=stmt.executeUpdate();
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+	}	
 	public UsuarioDTO getUsuarioPorNombre(String name) throws SQLException{
 		UsuarioDTO user= new UsuarioDTO();
 		Connection conn=null;
@@ -787,7 +831,7 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 
 		try{
 			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			String SQL="select codigo,persona_id,estado from usuario where codigo='"+name+"'";
+			String SQL="select codigo,persona_id,estado from usuario where codigo like'"+name+"%'";
 			stmt=conn.prepareStatement(SQL);
 			rs=stmt.executeQuery();
 			while (rs.next()) {

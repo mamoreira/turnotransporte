@@ -22,7 +22,7 @@ public class FondoInicial extends JPanel{
     
     public FondoInicial(){
     
-        fondo = new ImageIcon(getClass().getResource("/imagenes/fondo_gig4.jpg")).getImage();
+        fondo = new ImageIcon(getClass().getResource("/imagenes/fondomenu.jpg")).getImage();
 
     
     }

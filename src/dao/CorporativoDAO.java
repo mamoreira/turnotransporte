@@ -33,6 +33,11 @@ public interface CorporativoDAO {
 	public ArrayList<UsuarioDTO> getUsuarios() throws SQLException;
 	
 	public UsuarioDTO getUsuarioPorNombre(String name) throws SQLException;
+
+	public void guardarUsuario(UsuarioDTO usuario)throws SQLException;
+
+	public void actualizarUsuario(UsuarioDTO usuario)throws SQLException;
+
 	
 	
 }
