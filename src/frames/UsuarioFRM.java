@@ -1,6 +1,8 @@
 package frames;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ public class UsuarioFRM extends AbstractFRM{
 	}
 	public final void initComponents() throws SQLException{
     	setLayout(new BorderLayout());
-        setTitle(".::AUTENTICACION");
+        setTitle(".::USUARIO");
     	setSize(480,380);
     	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
     	
@@ -47,58 +49,55 @@ public class UsuarioFRM extends AbstractFRM{
     	buttonBuscar= new JButton();
     	buttonEditar= new JButton();
     	scrollListaUsuario= new JScrollPane();
-    	tableUsuario= new JTable();
+    	tableUsuario=new JTable(){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int rowIndex, int vColIndex) {
+                return false;
+            }}; 
+            
+            tableUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                	if(e.getClickCount()==2){
+                		accionEditar();
+                	}
+                }
+           });
     	fondo= new FondoInicial();
     	usuarioTemplate = new AgregarUsuarioFRM();
     	
+    	textUsuario.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){ 
+					try {
+						limpiarTabla(tableUsuario);
+						accionBuscar();
+						tableUsuario.getSelectionModel().setSelectionInterval(0,0);					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			public void keyReleased(KeyEvent e) {
+			}
+			public void keyTyped(KeyEvent e) {	
+			}
+		});
     	fondo.setBounds(0,0, 300,380);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelUsuario);
     	fondo.add(textUsuario);
     	add(fondo);
-    	
-    	usuarioTemplate.setVisible(false);
-    	
-    	
+    	//usuarioTemplate.setVisible(false);    	
     	labelUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/user.png")));
     	labelUsuario.setText("Usuario:");
     	
     	
  //BUTTON BUSCAR
         buttonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/find_icon.png")));
-
         buttonBuscar.addActionListener(new java.awt.event.ActionListener() {
  		   public void actionPerformed(java.awt.event.ActionEvent evt) {
  			  try {
- 	 			   String usuario= new String();
- 	 			   usuario=textUsuario.getText();
- 	 			   ArrayList <UsuarioDTO> usuariosLista= new ArrayList<>();
- 	 			   if(usuario.isEmpty()){
- 	 				   usuariosLista= corporativo.getUsuarios();
- 	 				   DefaultTableModel model = (DefaultTableModel) tableUsuario.getModel();
- 	 				   for(int i=0;i<model.getRowCount();i++){
- 	 					 model.removeRow(i);
- 	 				   }
- 	 				   
- 	 	 			   for(UsuarioDTO user:usuariosLista){
- 	 	 	 			 model.addRow(new Object[]{user.getNombre().toString(), user.getId().toString(), user.getEstado()});
- 	 	 			   }
- 	 			   }
- 	 			   else{ 
- 	 				   UsuarioDTO user= new UsuarioDTO();
- 	 				   user=corporativo.getUsuarioPorNombre(usuario);
- 	 				   if(user.getNombre().isEmpty()){
- 	 					 JOptionPane.showMessageDialog(null, " No se encontro ningun USUARIO  ", "error", JOptionPane.ERROR_MESSAGE);   
- 	 				   }
- 	 				   else{
- 	 					 DefaultTableModel model = (DefaultTableModel) tableUsuario.getModel();
- 	 					 model.addRow(new Object[]{user.getNombre().toString(), user.getId().toString(), user.getEstado()});
- 	 					   
- 	 				   }
- 	 				   
- 	 				   
- 	 			   }
- 	 			   
+ 	 			   accionBuscar();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -110,8 +109,7 @@ public class UsuarioFRM extends AbstractFRM{
         buttonEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/edit_icon.png")));
         buttonEditar.addActionListener(new java.awt.event.ActionListener() {
   		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-  			   //System.exit(0);
-  			   //BORRAR DATOS OCULTAR
+  			   accionEditar();
   		    }
         });
 
@@ -119,8 +117,8 @@ public class UsuarioFRM extends AbstractFRM{
         buttonAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/add_icon.png")));
         buttonAgregar.addActionListener(new java.awt.event.ActionListener() {
   		   public void actionPerformed(java.awt.event.ActionEvent evt) {
+  			 usuarioTemplate.setAccion(false); 
   			   usuarioTemplate.setVisible(true);
-  			   setVisible(false);
   		    }
         });
         
@@ -179,26 +177,63 @@ public class UsuarioFRM extends AbstractFRM{
                 .addContainerGap())
         );
 
-//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        layout.setHorizontalGroup(
-//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//        );
-//        layout.setVerticalGroup(
-//            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGroup(layout.createSequentialGroup()
-//                .addComponent(fondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-//                .addGap(0, 150, Short.MAX_VALUE))
-//        );
         setVisible(true);
         setLocationRelativeTo(null);
         //setVisible(true);
 	
 	}
-	
+    public void accionEditar() {
+    	try {
+            usuarioTemplate.setAccion(true);    
+    		String codigo=tableUsuario.getValueAt(tableUsuario.getSelectedRow(), 0)+"";
+			UsuarioDTO usuario=corporativo.getUsuarioPorNombre(codigo);
+			usuarioTemplate.getTextId().setText(usuario.getId()+"");
+			usuarioTemplate.getTextUsuario().setText(usuario.getNombre()+"");
+			usuarioTemplate.setVisible(true);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void accionBuscar() throws SQLException {
+		String usuario= new String();
+		limpiarTabla(tableUsuario);
+		usuario=textUsuario.getText();
+        ArrayList <UsuarioDTO> usuariosLista= new ArrayList<>();
+	    if(usuario.isEmpty()){
+		  usuariosLista= corporativo.getUsuarios();
+		  DefaultTableModel model = (DefaultTableModel) tableUsuario.getModel();
+			for(int i=0;i<model.getRowCount();i++){
+			  model.removeRow(i);
+			}   
+		    for(UsuarioDTO user:usuariosLista){
+		      model.addRow(new Object[]{user.getNombre().toString(), user.getId().toString(), user.getEstado()});
+		    }
+	    }
+	    else{ 
+	    	UsuarioDTO user= new UsuarioDTO();
+	    	user=corporativo.getUsuarioPorNombre(usuario);
+	    	if(user.getNombre() == null){
+	    		JOptionPane.showMessageDialog(null, " No se encontro ningun USUARIO  ", "info", JOptionPane.INFORMATION_MESSAGE);   
+	    	}
+			   else{
+				 DefaultTableModel model = (DefaultTableModel) tableUsuario.getModel();
+				 model.addRow(new Object[]{user.getNombre().toString(), user.getId().toString(), user.getEstado()});   
+			   }
+		   }
+	}
 
-	
+	public static void limpiarTabla(JTable tabla){
+
+		  try {
+		      DefaultTableModel modelo=(DefaultTableModel) tabla.getModel();
+		      int filas=tabla.getRowCount();
+		      for (int i = 0;filas>i; i++) {
+		          modelo.removeRow(0);
+		      }
+		  } catch (Exception e) {
+		      JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+		  }
+	}
 	public static void main(String args[]) {
         try {
         	new UsuarioFRM().setVisible(true);

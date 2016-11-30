@@ -26,8 +26,6 @@ public class LoginFRM extends AbstractFRM{
 	private FondoInicial fondo;
     private JButton buttonIngresar;
     private JButton buttonCancelar;
-    private JButton buttonConsultarTurno;
-    private JButton buttonTransporte;
     
     private PantallaCargando p;
 	
@@ -39,10 +37,8 @@ public class LoginFRM extends AbstractFRM{
 	public final void initComponents() throws SQLException{
     	setLayout(new BorderLayout());
         setTitle(".::AUTENTICACION");
-    	setSize(300,380);
-    	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
-    	
-    	
+    	setSize(300,300);
+    	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());    	
     	buttonIngresar= new JButton();
     	buttonCancelar= new JButton();
     	labelUsuario= new JLabel();
@@ -51,54 +47,19 @@ public class LoginFRM extends AbstractFRM{
     	textPass= new JPasswordField();
     	
     	fondo=new FondoInicial("/imagenes/fondomenu.jpg");
-
-    	
-//    	buttonGenerarTurno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/generarTurno.png"))); // NOI18N
-//    	buttonGenerarTurno.setFont(new java.awt.Font("Kristen ITC", 1, 14)); 
-//    	buttonGenerarTurno.setFocusable(false);
-//    	buttonGenerarTurno.setBackground(new Color(0, 204, 204));
-//    	buttonGenerarTurno.setText(" Generar Sorteo  ");
-//    	buttonGenerarTurno.addActionListener(new java.awt.event.ActionListener() {
-//		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-//		        new MatrizFRM().setVisible(true);
-//		    }
-//		   });
-//    	buttonConsultarTurno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/menuBuscar.png"))); // NOI18N
-//    	buttonConsultarTurno.setFont(new java.awt.Font("Kristen ITC", 1, 14)); 
-//    	buttonConsultarTurno.setFocusable(false);
-//    	buttonConsultarTurno.setBackground(new Color(0, 204, 204));
-//    	buttonConsultarTurno.setText("Consultar Turnos");
-//    	buttonConsultarTurno.addActionListener(new java.awt.event.ActionListener() {
-//		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-//			   new ConsultaFRM().setVisible(true);
-//		    }
-//		   });
-    	
-    	
-
-    	fondo.setBounds(0,0, 300,380);
+    	fondo.setBounds(0,0, 300,300);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelUsuario);
     	fondo.add(labelContrasena);
     	add(fondo);
-
-    	
     	labelUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/user.png"))); // NOI18N
         labelUsuario.setText("Usuario:");
-
         buttonIngresar.setText("Ingresar");
-//        buttonIngresar.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                jToggleButton1ActionPerformed(evt);
-//            }
-//        });
         buttonIngresar.addActionListener(new java.awt.event.ActionListener() {
  		   public void actionPerformed(java.awt.event.ActionEvent evt) {
  			    try {
  			    	if(validarCampos()){
- 			    		//p = new PantallaCargando();
- 		            	//p.setProgreso("Cargando...", 50);
- 			    		acciongenerar();
+ 			    		accionIngresar();
  					}
  				} catch (SQLException e) {
  					e.printStackTrace();
@@ -118,12 +79,6 @@ public class LoginFRM extends AbstractFRM{
   			   System.exit(0);
   		    }
         });
-//        buttonCancelar.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                jButton1ActionPerformed(evt);
-//            }
-//        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(fondo);
         fondo.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -208,7 +163,7 @@ public class LoginFRM extends AbstractFRM{
 					
 	}
 	 
-	 protected void acciongenerar() throws SQLException {
+	 protected void accionIngresar() throws SQLException {
 				Boolean llave=corporativo.validarLogin(textUser.getText(),textPass.getText()); 
 				if(llave==true){
 					this.setVisible(false);
