@@ -77,7 +77,12 @@ public class MenuFRM extends AbstractFRM{
     	buttonTransporte.setText("    Transporte      ");
     	buttonTransporte.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
-		        accionUsuario();
+				try {
+					new TransporteFRM().setVisible(true);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    }
 		   });
     	
