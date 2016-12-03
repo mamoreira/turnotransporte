@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -23,6 +24,7 @@ import com.toedter.calendar.JDateChooser;
 import dtos.TurnoDTO;
 import util.FondoInicial;
 import util.Label;
+import util.Util;
 
 public class ConsultaFRM extends AbstractFRM{
 
@@ -34,6 +36,7 @@ public class ConsultaFRM extends AbstractFRM{
     private JDateChooser chooserFechaFinal;
     private FondoInicial fondo; 
     private TurnoDTO turno;
+    private TurnoDTO turnov;
     private PantallaCargando p;
     private JTable tableTurnos;
     private JScrollPane scrollListaTurnos; 
@@ -43,6 +46,7 @@ public class ConsultaFRM extends AbstractFRM{
 	private static final long serialVersionUID = 6312166505526175828L;
      public ConsultaFRM (){
     	 turno=new TurnoDTO();
+    	 turnov= new TurnoDTO();
 		initComponent();
 	}
 
@@ -71,6 +75,23 @@ public class ConsultaFRM extends AbstractFRM{
     	buttonBuscar.setMargin(new Insets(0, 0, 0, 0));
     	buttonBuscar.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
+			   try {
+				   if(validarCampos()){
+					   TurnoDTO turnoTmp= corporativo.validarRangoFechasTurno(turnov);
+					   if(turnoTmp==null){
+						   JOptionPane.showMessageDialog(null, "No se ha encontrado ningun sorteo en esta fecha", "INFO", JOptionPane.INFORMATION_MESSAGE);
+					   }else{
+						   corporativo.mostarReporteTurno(turnov);  
+					   }
+					   
+				   }
+				
+		
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			   
 			
 		    }
 		    
@@ -82,8 +103,8 @@ public class ConsultaFRM extends AbstractFRM{
     			
             @Override
             public void mousePressed(MouseEvent e) {
-            	p = new PantallaCargando();
-            	p.setProgreso("Cargando...", 50);
+            	//p = new PantallaCargando();
+            	//p.setProgreso("Cargando...", 50);
             }
         });
     	
@@ -134,4 +155,27 @@ public class ConsultaFRM extends AbstractFRM{
 		}
 		p.setVisible(false);
 	}
+	
+		protected boolean validarCampos() {
+			if (chooserFechaInicial.getDate() == null){
+				JOptionPane.showMessageDialog(null, "Campo FECHA INICIAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(chooserFechaFinal.getDate() == null){
+				JOptionPane.showMessageDialog(null, "Campo FECHA FINAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(Util.getDiaSemana(chooserFechaInicial.getDate())!=2){
+				JOptionPane.showMessageDialog(null, "Fecha inicial incorrecta, acepta solo LUNES", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+		    }else if(Util.getDiaSemana(chooserFechaFinal.getDate())!=1){
+		    	
+		    	JOptionPane.showMessageDialog(null, "Fecha final incorrecta, acepta solo DOMINGOS", "error", JOptionPane.ERROR_MESSAGE);
+		    }else if(Util.diferenciaFechas(chooserFechaInicial.getDate(),chooserFechaFinal.getDate())!=7){
+		    	JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
+		    }		
+			turnov.setFechaInicio(chooserFechaInicial.getDate());
+	    	turnov.setFechaFin(chooserFechaFinal.getDate());    	
+	    	turnov.setFechaCreacion(new Date(corporativo.getFecha()));
+			return true;
+		}
+	
 }
