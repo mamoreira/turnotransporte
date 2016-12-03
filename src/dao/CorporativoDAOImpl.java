@@ -34,6 +34,8 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 	private final String SQL_UPDATE_USUARIO="UPDATE usuario SET estado=? where codigo=?";
 	private final String SQL_UPDATE_USUARIO_CLAVE="UPDATE usuario SET clave=md5(?), estado=? where codigo=?";
 	private final String SQL_INSERT_USUARIO="INSERT INTO usuario (codigo, clave, estado, persona_id) VALUES (?,md5(?),?, '1')";
+	private final String SQL_INSERT_TRANSPORTE="INSERT INTO transporte (disco, persona_id, estado) VALUES (?,1,?)";
+	private final String SQL_UPDATE_TRANSPORTE="UPDATE transporte SET estado=? where disco=?";
 
 	public PersonaDTO obtenerPersonaPorId(Long id) throws SQLException{
 		Connection conn=null;
@@ -397,32 +399,6 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}        
         return discos;
 	}
-	
-	private TransporteDTO obtenerTransportePorDisco(Long long1) throws SQLException {
-		Connection conn=null;
-		PreparedStatement stmt=null;
-		ResultSet rs=null;
-    	TransporteDTO transporte=new TransporteDTO();
-
-		try{
-			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
-			stmt=conn.prepareStatement(
-				"select id,disco,estado from transporte where disco="+long1);
-			rs=stmt.executeQuery();
-	        while (rs.next()) {
-	        	transporte.setId(rs.getLong(1));
-	        	transporte.setDisco(rs.getLong(2));
-	        	transporte.setEstado(rs.getString(3));
-	        }
-		}
-		finally{
-			Conexion.close(stmt);
-			if(this.userConn==null){
-				Conexion.close(conn);
-			}
-		}        
-        return transporte;
-	}
 	private List<PuestoDTO> obtenerPrimerosPuestos(String dia) throws SQLException {
 		Connection conn=null;
 		PreparedStatement stmt=null;
@@ -772,7 +748,33 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}
 		return listadeUsuarios;
 	}
+	public ArrayList<TransporteDTO> obtenerTransportes() throws SQLException{
+		ArrayList<TransporteDTO> listadeTransporte= new ArrayList<>();
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
 
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			String SQL="select id,disco,estado from transporte";
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				TransporteDTO user= new TransporteDTO();
+				user.setId(rs.getLong(1));
+				user.setDisco(rs.getLong(2));
+				user.setEstado(rs.getString(3));
+				listadeTransporte.add(user);
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return listadeTransporte;
+	}
 	public void guardarUsuario(UsuarioDTO usuario)throws SQLException{
 		Connection conn=null;
 		PreparedStatement stmt=null;
@@ -795,6 +797,71 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 		}
 	}
 
+	public void actualizarTransporte(TransporteDTO transporte)throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		int rows=0;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			stmt=conn.prepareStatement(SQL_UPDATE_TRANSPORTE);
+			int index=1;
+			stmt.setString(index++, transporte.getEstado());
+			stmt.setLong(index++, transporte.getDisco());
+			rows=stmt.executeUpdate();
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+	}
+
+	public void guardarTransporte(TransporteDTO transporte)throws SQLException{
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		int rows=0;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			//System.out.println("Ejecutando query: "+SQL_INSERT_TURNODETALLE);
+			stmt=conn.prepareStatement(SQL_INSERT_TRANSPORTE);
+			int index=1;
+			stmt.setLong(index++, transporte.getDisco());
+			stmt.setString(index++, transporte.getEstado());
+			rows=stmt.executeUpdate();
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+	}
+	public TransporteDTO obtenerTransportePorDisco(Long disco)throws SQLException{
+		TransporteDTO transporte= new TransporteDTO();
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			String SQL="select disco,id,estado from transporte where disco ="+disco;
+			stmt=conn.prepareStatement(SQL);
+			rs=stmt.executeQuery();
+			while (rs.next()) {
+				transporte.setDisco(rs.getLong(1));
+				transporte.setId(rs.getLong(2));
+				transporte.setEstado(rs.getString(3));
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}
+		return transporte;
+	}
 	public void actualizarUsuario(UsuarioDTO usuario)throws SQLException{
 		Connection conn=null;
 		PreparedStatement stmt=null;

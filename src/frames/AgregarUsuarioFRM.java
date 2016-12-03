@@ -58,14 +58,7 @@ public class AgregarUsuarioFRM extends AbstractFRM{
     	textUsuario= new JTextField();
     	textPass= new JPasswordField();    	
     	cmbBxEstado = new JComboBox<>();
-    	
-    	
-    	
-    	
     	fondo=new FondoInicial("/imagenes/fondomenu.jpg");
-    	
-    	
-
     	fondo.setBounds(0,0, 300,380);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelId);

@@ -3,49 +3,67 @@ package frames;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
+import com.sun.javafx.sg.prism.GrowableDataBuffer;
 import com.toedter.calendar.JDateChooser;
 
 import dtos.TurnoDTO;
 import util.FondoInicial;
 import util.Label;
+import util.Util;
 
 public class ConsultaFRM extends AbstractFRM{
 
-	private Label labelFecha;
-	private Label labelId;
+	private Label labelDescription;
+	private Label labelFechaFinal;
+	private Label labelFechaInicial;
 	private JButton buttonBuscar;
     private JDateChooser chooserFechaInicial;
-    private JTextField textId;
+    private JDateChooser chooserFechaFinal;
     private FondoInicial fondo; 
     private TurnoDTO turno;
+    private TurnoDTO turnov;
     private PantallaCargando p;
+    private JTable tableTurnos;
+    private JScrollPane scrollListaTurnos; 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6312166505526175828L;
      public ConsultaFRM (){
     	 turno=new TurnoDTO();
+    	 turnov= new TurnoDTO();
 		initComponent();
 	}
 
 	private void initComponent() {
 		setLayout(new BorderLayout());
         setTitle(".::CONSULTA TURNO");
-    	setSize(400,150);
-    	labelFecha = new Label("FECHA:");
-    	labelId=new Label("ID: ");
-    	textId=new JTextField(5);
+    	setSize(500,250);
+    	labelDescription= new Label("    Debe Escojer un Rango de Fecha No mayor a 30 Dias:   ");
+    	labelFechaFinal = new Label("FECHA FINAL: ");
+    	labelFechaInicial=new Label("FECHA INICIAL: ");
     	buttonBuscar=new JButton();
     	
     	chooserFechaInicial= new JDateChooser();
+    	chooserFechaFinal = new JDateChooser();
+    	tableTurnos =new JTable();
+    	scrollListaTurnos= new JScrollPane();
+    	
     	fondo=new FondoInicial("/imagenes/fondomenu.jpg");
     	
     	
@@ -57,6 +75,23 @@ public class ConsultaFRM extends AbstractFRM{
     	buttonBuscar.setMargin(new Insets(0, 0, 0, 0));
     	buttonBuscar.addActionListener(new java.awt.event.ActionListener() {
 		   public void actionPerformed(java.awt.event.ActionEvent evt) {
+			   try {
+				   if(validarCampos()){
+					   TurnoDTO turnoTmp= corporativo.validarRangoFechasTurno(turnov);
+					   if(turnoTmp==null){
+						   JOptionPane.showMessageDialog(null, "No se ha encontrado ningun sorteo en esta fecha", "INFO", JOptionPane.INFORMATION_MESSAGE);
+					   }else{
+						   corporativo.mostarReporteTurno(turnov);  
+					   }
+					   
+				   }
+				
+		
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			   
 			
 		    }
 		    
@@ -68,17 +103,31 @@ public class ConsultaFRM extends AbstractFRM{
     			
             @Override
             public void mousePressed(MouseEvent e) {
-            	p = new PantallaCargando();
-            	p.setProgreso("Cargando...", 50);
+            	//p = new PantallaCargando();
+            	//p.setProgreso("Cargando...", 50);
             }
         });
-    	fondo.setBounds(0,0, 300,250);
+    	
+    	//Tabla
+    	DefaultTableModel modelo= new DefaultTableModel();
+        modelo.addColumn("Usuario");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Estado");
+        tableTurnos.setModel(modelo);
+        scrollListaTurnos.setViewportView(tableTurnos);
+    	
+    	fondo.setBounds(0,0, 400,250);
     	fondo.setLayout(new FlowLayout());
-    	fondo.add(labelId);
-    	fondo.add(textId);
-    	fondo.add(labelFecha);
+
+    	fondo.add(labelDescription);
+    	fondo.add(labelFechaInicial);
     	fondo.add(chooserFechaInicial);
+    	fondo.add(labelFechaFinal);
+    	fondo.add(chooserFechaFinal);
     	fondo.add(buttonBuscar);
+    	fondo.add(scrollListaTurnos);
+    	tableTurnos.setSize(50, 50);
+    	scrollListaTurnos.setSize(50, 50);
     	add(fondo,BorderLayout.CENTER);
     	setLocationRelativeTo(null);
         setVisible(true);
@@ -106,4 +155,27 @@ public class ConsultaFRM extends AbstractFRM{
 		}
 		p.setVisible(false);
 	}
+	
+		protected boolean validarCampos() {
+			if (chooserFechaInicial.getDate() == null){
+				JOptionPane.showMessageDialog(null, "Campo FECHA INICIAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(chooserFechaFinal.getDate() == null){
+				JOptionPane.showMessageDialog(null, "Campo FECHA FINAL obligatorio", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}else if(Util.getDiaSemana(chooserFechaInicial.getDate())!=2){
+				JOptionPane.showMessageDialog(null, "Fecha inicial incorrecta, acepta solo LUNES", "error", JOptionPane.ERROR_MESSAGE);
+				return false;
+		    }else if(Util.getDiaSemana(chooserFechaFinal.getDate())!=1){
+		    	
+		    	JOptionPane.showMessageDialog(null, "Fecha final incorrecta, acepta solo DOMINGOS", "error", JOptionPane.ERROR_MESSAGE);
+		    }else if(Util.diferenciaFechas(chooserFechaInicial.getDate(),chooserFechaFinal.getDate())!=7){
+		    	JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
+		    }		
+			turnov.setFechaInicio(chooserFechaInicial.getDate());
+	    	turnov.setFechaFin(chooserFechaFinal.getDate());    	
+	    	turnov.setFechaCreacion(new Date(corporativo.getFecha()));
+			return true;
+		}
+	
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import dtos.PersonaDTO;
+import dtos.TransporteDTO;
 import dtos.TurnoDTO;
 import dtos.UsuarioDTO;
 
@@ -37,6 +38,14 @@ public interface CorporativoDAO {
 	public void guardarUsuario(UsuarioDTO usuario)throws SQLException;
 
 	public void actualizarUsuario(UsuarioDTO usuario)throws SQLException;
+
+	public void actualizarTransporte(TransporteDTO transporte) throws SQLException;
+
+	public void guardarTransporte(TransporteDTO transporte)throws SQLException;
+
+	public TransporteDTO obtenerTransportePorDisco(Long disco)throws SQLException;
+
+	public ArrayList<TransporteDTO> obtenerTransportes()throws SQLException;
 
 	
 	

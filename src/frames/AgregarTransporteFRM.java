@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import dtos.UsuarioDTO;
+import dtos.TransporteDTO;
 import util.FondoInicial;
 import util.Util;
 
@@ -21,12 +21,10 @@ public class AgregarTransporteFRM extends AbstractFRM{
 	private static final long serialVersionUID = 6312166505526175828L;
 	
 	private JLabel labelId;
-	private JLabel labelUsuario;
-	private JLabel labelClave;
+	private JLabel labelDisco;
 	private JLabel labelEstado;
 	private JTextField textId;
-	private JTextField textUsuario;
-	private JPasswordField textPass;
+	private JTextField textDisco;
 	private JComboBox<String> cmbBxEstado;
 	private boolean accion;// false giardar true actualizar
 	
@@ -43,7 +41,7 @@ public class AgregarTransporteFRM extends AbstractFRM{
 	}
 	public final void initComponents() throws SQLException{
     	setLayout(new BorderLayout());
-        setTitle(".::AUTENTICACION");
+        setTitle(".::TRANSPORTE");
     	setSize(300,380);
     	setIconImage(new ImageIcon(getClass().getResource("/imagenes/bus_grn.png")).getImage());
     	
@@ -51,34 +49,22 @@ public class AgregarTransporteFRM extends AbstractFRM{
     	buttonAgregar= new JButton();    	
     	
     	labelId= new JLabel();
-    	labelUsuario= new JLabel();
-    	labelClave = new JLabel();
+    	labelDisco= new JLabel();
     	labelEstado = new JLabel();
     	textId= new JTextField();
-    	textUsuario= new JTextField();
-    	textPass= new JPasswordField();    	
+    	textDisco= new JTextField();
     	cmbBxEstado = new JComboBox<>();
-    	
-    	
-    	
-    	
     	fondo=new FondoInicial("/imagenes/fondomenu.jpg");
-    	
-    	
-
     	fondo.setBounds(0,0, 300,380);
     	fondo.setLayout(new FlowLayout());
     	fondo.add(labelId);
-    	fondo.add(labelUsuario);
-    	fondo.add(labelClave);
+    	fondo.add(labelDisco);
+    	fondo.add(labelEstado);
     	fondo.add(labelEstado);
     	fondo.add(cmbBxEstado);
-    	add(fondo);
-
-    	
+    	add(fondo); 	
         labelId.setText("ID:");
-        labelUsuario.setText("USUARIO:");
-        labelClave.setText("CONTRASENA:");    
+        labelDisco.setText("DISCO:");
         labelEstado.setText("ESTADO:");
         cmbBxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
         
@@ -116,13 +102,12 @@ public class AgregarTransporteFRM extends AbstractFRM{
                         .addGroup(panelLogin.createSequentialGroup()
                             .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(labelId)
-                                .addComponent(labelUsuario)
-                                .addComponent(labelClave)
+                                .addComponent(labelDisco)
+                                .addComponent(labelEstado)
                                 .addComponent(labelEstado))
                             .addGap(22,22,22)
                             .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(textPass, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                                .addComponent(textUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                                .addComponent(textDisco, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                                 .addComponent(textId)
                                 .addComponent(cmbBxEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addContainerGap(147, Short.MAX_VALUE))
@@ -137,16 +122,13 @@ public class AgregarTransporteFRM extends AbstractFRM{
                     .addComponent(labelId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelUsuario)
-                    .addComponent(textUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelDisco)
+                    .addComponent(textDisco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textPass))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbBxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelEstado))
+                	)
                 .addGap(18, 18, 18)
                 .addGroup(panelLogin.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(buttonAgregar))
@@ -173,38 +155,27 @@ public class AgregarTransporteFRM extends AbstractFRM{
 
     }
 	
-	 protected void accionUsuario() {
+	 protected void acciontransporte() {
 		// TODO Auto-generated method stub
 		
 	}
 	 
 	 protected boolean validarCampos() {
-			if (textId.getText() == null){
-				JOptionPane.showMessageDialog(null, "Ingrese el NOMBRE DE USUARIO ", "error", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}else {
-				if(textPass.getPassword() == null){
-				JOptionPane.showMessageDialog(null, "Ingrese CONTRASENA", "error", JOptionPane.ERROR_MESSAGE);
-				return false;
-				}
-				else
-					return true;
-			}
-					
+
+					return false;
 	}
 	 //0 guardar 1 actualizar
 	 protected void accionGuardar() throws SQLException {
-		 UsuarioDTO usuario=new UsuarioDTO();
-		 usuario.setId(Long.parseLong(textId.getText()));
-		 usuario.setNombre(textUsuario.getText());
-		 usuario.setClave(textPass.getText());
-		 usuario.setEstado(cmbBxEstado.getSelectedItem()=="Activo"?"A":"I");
+		 TransporteDTO transporte=new TransporteDTO();
+		 transporte.setId(Long.parseLong(textId.getText()));
+		 transporte.setDisco(Long.parseLong(textDisco.getText()));
+		 transporte.setEstado(cmbBxEstado.getSelectedItem()=="Activo"?"A":"I");
 		 if(accion){
-	        corporativo.actualizarUsuario(usuario);
+	        corporativo.actualizarTransporte(transporte);
 		 }else{
-		    corporativo.guardarUsuario(usuario);
+		    corporativo.guardarTransporte(transporte);
 		 }
-		 JOptionPane.showMessageDialog(null, "Usuario Guardó correctamente", "INFO", JOptionPane.INFORMATION_MESSAGE);
+		 JOptionPane.showMessageDialog(null, "transporte Guardó correctamente", "INFO", JOptionPane.INFORMATION_MESSAGE);
 		 setVisible(false);
 	     
 		}
@@ -224,17 +195,11 @@ public class AgregarTransporteFRM extends AbstractFRM{
 	public void setTextId(JTextField textId) {
 		this.textId = textId;
 	}
-	public JTextField getTextUsuario() {
-		return textUsuario;
+	public JTextField getTextDisco() {
+		return textDisco;
 	}
-	public void setTextUsuario(JTextField textUsuario) {
-		this.textUsuario = textUsuario;
-	}
-	public JPasswordField getTextPass() {
-		return textPass;
-	}
-	public void setTextPass(JPasswordField textPass) {
-		this.textPass = textPass;
+	public void setTextDisco(JTextField texttransporte) {
+		this.textDisco = texttransporte;
 	}
 	public JComboBox<String> getCmbBxEstado() {
 		return cmbBxEstado;
