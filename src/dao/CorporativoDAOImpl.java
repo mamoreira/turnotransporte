@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -914,6 +915,30 @@ public class CorporativoDAOImpl implements CorporativoDAO {
 			}
 		}
 		return user;
+	}
+	
+	public Date obtenerFechaInicialUltimoSorteo() throws SQLException {
+		Connection conn=null;
+		PreparedStatement stmt=null;
+		ResultSet rs=null;
+		Date fecha= new Date();
+
+		try{
+			conn=(this.userConn!=null)?this.userConn:Conexion.getConnection();
+			stmt=conn.prepareStatement(
+				"SELECT fecha_inicio FROM turno t WHERE t.id=(SELECT max(id) FROM turno);");
+			rs=stmt.executeQuery();
+			while(rs.next()){
+				fecha=rs.getDate(1);
+			}
+		}
+		finally{
+			Conexion.close(stmt);
+			if(this.userConn==null){
+				Conexion.close(conn);
+			}
+		}        
+        return fecha;
 	}
 
 }

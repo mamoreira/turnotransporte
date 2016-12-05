@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import dtos.PersonaDTO;
@@ -46,6 +47,8 @@ public interface CorporativoDAO {
 	public TransporteDTO obtenerTransportePorDisco(Long disco)throws SQLException;
 
 	public ArrayList<TransporteDTO> obtenerTransportes()throws SQLException;
+	
+	public Date obtenerFechaInicialUltimoSorteo() throws SQLException;
 
 	
 	

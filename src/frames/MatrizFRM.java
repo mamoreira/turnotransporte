@@ -97,7 +97,7 @@ public class MatrizFRM extends AbstractFRM{
         setVisible(true);
 	}
 
-	protected boolean validarCampos() {
+	protected boolean validarCampos() throws SQLException {
 		if (chooserFechaInicial.getDate() == null){
 			//t.interrupt();
 			pr.cerrar();
@@ -132,6 +132,14 @@ public class MatrizFRM extends AbstractFRM{
 	    	JOptionPane.showMessageDialog(null, "Se puede generar sorteo solo por semana", "error", JOptionPane.ERROR_MESSAGE);
 	    	t.interrupt();//p.setVisible(false);
 			return false;
+	    }else if(esNuevoSorteo(chooserFechaInicial)){
+	    	if(validarSiguienteSorteo(chooserFechaInicial)==false){
+	    		pr.cerrar();
+	    		JOptionPane.showMessageDialog(null, "Debe realizar el Sorteo de la Semana Siguiente", "error", JOptionPane.ERROR_MESSAGE);
+	    		t.interrupt();
+	    		return false;
+	    	}
+	    	//aqui
 	    }
 				
 		turno.setFechaInicio(chooserFechaInicial.getDate());
@@ -167,6 +175,37 @@ public class MatrizFRM extends AbstractFRM{
 		}
 		
 		//p.setVisible(false);
+	}
+	
+	protected boolean validarSiguienteSorteo(JDateChooser fechaInicial) throws SQLException{
+		Long dias;
+		Date fechaIni =new Date();
+		fechaIni=corporativo.obtenerFechaInicialUltimoSorteo();
+		dias= (fechaInicial.getDate().getTime()-fechaIni.getTime())/(3600*24*1000);
+		System.out.println("DIAs AL sorteo anterior: "+dias);
+		if(dias>7){
+			return false;
+		}
+		else{
+		return true;
+		}
+	} 
+	
+	protected boolean esNuevoSorteo(JDateChooser fechaInicial){
+		Long dias=0L;
+		try {
+			dias=(fechaInicial.getDate().getTime()-corporativo.obtenerFechaInicialUltimoSorteo().getTime())/(3600*24*1000);
+			System.out.println("Cantidad de Dias"+dias);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(dias >6){
+			return true;
+		}else{
+			return false;
+		}
+		
 	}
 	
 	protected void crearHilo(){
